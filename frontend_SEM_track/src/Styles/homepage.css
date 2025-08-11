@@ -39,12 +39,8 @@
 .hero-buttons .btn {
  
   margin-right: 50px;
-
   font-size: 1rem;
   padding: 8px 16px;
-
-
-
   justify-content: left; /* Center buttons horizontally */
            
 }
@@ -103,7 +99,7 @@
 
 .join-us {
 
-  
+  display: flex;
   flex-direction: row;
   margin-top: 60px;
   gap: 40px;
@@ -114,36 +110,43 @@
 .join-content {
 
   
-  flex-direction: column;
-  flex: 1;
+ display: flex;
+  align-items: center;      /* vertically center items */
+  justify-content: space-between;
+  width: 100%;
+  height: 100%; 
+
 
 }
 
-.join-content h2 {
+.join-content h1 {
   max-width: 50%;
  text-align: justify;
-  font-size: 2rem;
+  font-size:3rem;
+  font-weight:700;
   margin-bottom: 20px;
- 
+  width: 500px;
 }
+ 
 
-.join-buttons .btn {
-  margin-right: 10px;
+
+
+
+/* Right side: image */
+.join-image {
+  flex: 1;                   /* take up 50% of width */
+  display: flex;
+  justify-content: right;
+  align-items:end;
 }
 
 .join-image img {
-  max-width: 50%;
-  border-radius: 8px;
-  margin-left: 100px;
-  float: right;
+  max-width:750px;
+  height: 500px;
+  border-radius: 8px;        /* optional rounded corners */
 }
-
-
-
-
-.hero-buttons .btn:hover {
+.btn:hover {
   background-color:#0000FF;
   color: white;
 }
-
 

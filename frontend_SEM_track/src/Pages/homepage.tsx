@@ -66,15 +66,17 @@ const Homepage = () =>{
       <section className='join-us'>
         
         <div className="join-content">
-          <h2>Join us Today to make <br></br>your semester effectively !</h2>
-          <div className="join-buttons">
-            <button className="btn">Sign Up</button>
-            <button className="btn">Log in</button>
-          </div>
-        </div>
+         
+      
+          <h1>Join us Today to make your semester effectively !</h1>
+        
+          
         <div className="join-image">
           <img src="/src/assets/homepage_image2.jpg" alt="Calendar scheduling" />
         </div>
+          
+        </div>
+       
         
       </section>
     </main>
