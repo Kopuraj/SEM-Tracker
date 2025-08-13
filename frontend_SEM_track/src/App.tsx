@@ -1,5 +1,5 @@
 import Header from '../src/Components/Header';
-import Footer from '../src/Components/footer';
+import Footer from '../src/Components/Footer';
 import Homepage from '../src/Pages/homepage';
 
 function App() {
