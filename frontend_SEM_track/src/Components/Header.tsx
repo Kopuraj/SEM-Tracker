@@ -1,20 +1,32 @@
 
 import '../Styles/Header.css'
-
+import { NavLink, useNavigate } from 'react-router-dom'; // Import useNavigate hook
 const Header = () => {
+
+  const navigate = useNavigate(); // Initialize the navigate function
+
+  const handleLoginClick = () => {
+    navigate('/loginpage'); // Programmatic navigation to the login page
+  };
   return (
     <header className="header">
       <div className="logo">SEM-Tracker</div>
 
       <nav className="nav-links">
-        <a href="/">Home Page</a>
-        <a href="/about">About Us</a>
-        <a href="/contact">Contact Us</a>
+        <NavLink to="/" end>
+        Homepage
+      </NavLink>
+      <NavLink to="/contactus">Contactus</NavLink>
+      <NavLink to="/aboutuspage">Aboutuspage</NavLink>
+        
+        
+        
         
       <div className='dropdown'>
           <a href="/more">More Link</a>
            <div className="dropdown-content">
-           <a href="#">Time Table</a>
+            <NavLink to="/timetablepage">Time Table</NavLink>
+           
            <a href="#">Quiz & Exams</a>
            <a href="#">Attendance</a>
            <a href="#">Profile</a>
@@ -22,7 +34,9 @@ const Header = () => {
       </div>
       </nav>
 
-      <button className="login-btn">Log In</button>
+        <button type="button" className="login-btn" onClick={handleLoginClick}>
+        Log In
+      </button>
     </header>
   );
 };

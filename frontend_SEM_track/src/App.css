@@ -3,15 +3,19 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color:240,248,255;
+  background-color: rgb(240, 248, 255);
+  min-width: 100%; /* Ensure it fills the width of the screen */
 }
 
 
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
 
 .card {
   padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  width: 100%; /* Ensure cards take up full width */
 }

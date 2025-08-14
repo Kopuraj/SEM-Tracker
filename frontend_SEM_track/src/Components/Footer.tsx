@@ -1,7 +1,8 @@
-import '../Styles/footer.css'
-const Footer = () =>{
-    return(
-        <footer className="footer">
+import '../styles/Footer.css';
+
+const Footer = () => {
+  return (
+    <footer className="footer">
       <div className="footer-content">
         <div className="quick-links">
           <h4>Quick Links</h4>
@@ -18,9 +19,14 @@ const Footer = () =>{
           <p>Phone: <a href="tel:+94741125425">+94741125425</a></p>
         </div>
       </div>
+      <div className="footer-bottom-line">
+        © {new Date().getFullYear()} Kopuraj T. All rights reserved.
+      </div>
     </footer>
-
-    );
-
+  );
 };
+
 export default Footer;
+
+
+
