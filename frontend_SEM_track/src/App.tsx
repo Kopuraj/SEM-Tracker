@@ -6,6 +6,7 @@ import Contactus from '../src/Pages/contactus'
 import Loginpage from './Pages/loginpage';
 import Aboutuspage from './Pages/aboutuspage';
 import Timetablepage from './Pages/timetablepage';
+import Attendancepage from './Pages/attendancepage';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path='/loginpage' element={< Loginpage/>}/>
           <Route path='/aboutuspage' element={<Aboutuspage/>}/>
           <Route path='/timetablepage' element={< Timetablepage/>}/>
+          <Route path ='/attendancepage' element={<Attendancepage/>}/>
       </Routes>
        
       <Footer/>

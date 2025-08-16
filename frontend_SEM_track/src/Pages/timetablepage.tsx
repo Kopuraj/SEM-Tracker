@@ -3,14 +3,7 @@ const Timetablepage = () =>{
     return(
 <div className="timetable-container2">
     <div className='image_text-container'>
-      <div className="image-container">
-        <img 
-          src="/src/assets/Timetable_image.jpg" 
-          alt="Timetable" 
-          className="timetable-image"
-        />
-      </div>
-
+      
       
         <div className="text-container">
           <h1>Effortlessly manage <br></br>your timetable:</h1>
@@ -18,6 +11,15 @@ const Timetablepage = () =>{
             Add, update, and delete <br></br>entries with just a few clicks.
           </p>
         </div>
+
+        <div className="image-container">
+        <img 
+          src="/src/assets/Timetable_image.jpg" 
+          alt="Timetable" 
+          className="timetable-image"
+        />
+      </div>
+
    </div>
 
         <div className="button-container">

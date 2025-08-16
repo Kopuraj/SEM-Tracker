@@ -28,7 +28,8 @@ const Header = () => {
             <NavLink to="/timetablepage">Time Table</NavLink>
            
            <a href="#">Quiz & Exams</a>
-           <a href="#">Attendance</a>
+           
+           <NavLink to="/attendancepage">Attendance</NavLink>
            <a href="#">Profile</a>
   </div>
       </div>
