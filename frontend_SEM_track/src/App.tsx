@@ -7,7 +7,7 @@ import Loginpage from './Pages/loginpage';
 import Aboutuspage from './Pages/aboutuspage';
 import Timetablepage from './Pages/timetablepage';
 import Attendancepage from './Pages/attendancepage';
-
+import ExamsQuizpage from './Pages/examsquizpage';
 
 function App() {
   return (
@@ -22,6 +22,7 @@ function App() {
           <Route path='/aboutuspage' element={<Aboutuspage/>}/>
           <Route path='/timetablepage' element={< Timetablepage/>}/>
           <Route path ='/attendancepage' element={<Attendancepage/>}/>
+          <Route path ='/examsquizpage'  element={<ExamsQuizpage/>}/>
       </Routes>
        
       <Footer/>

@@ -7,6 +7,8 @@ const Header = () => {
 
   const handleLoginClick = () => {
     navigate('/loginpage'); // Programmatic navigation to the login page
+
+
   };
   return (
     <header className="header">
@@ -26,8 +28,8 @@ const Header = () => {
           <a href="/more">More Link</a>
            <div className="dropdown-content">
             <NavLink to="/timetablepage">Time Table</NavLink>
-           
-           <a href="#">Quiz & Exams</a>
+           <NavLink to="/examsquizpage">Quiz & Exams</NavLink>
+          
            
            <NavLink to="/attendancepage">Attendance</NavLink>
            <a href="#">Profile</a>
