@@ -1,15 +1,15 @@
-import '../Styles/loginpage.css';
+import '../Styles/signuppage.css';
 import  { useState } from 'react';
-const Loginpage = () =>{
-
+const  Signuppage= () =>{
      const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(''); // Added missing email state
+
 
     return(
-
-        <div className="login-container">
-      <div className="login-box">
-        <h2>Login</h2>
+        <div className="signup-container">
+      <div className="signup-box">
+        <h2>Signup</h2>
         <form>
           <div className="input-group">
             <input
@@ -29,17 +29,28 @@ const Loginpage = () =>{
               required
             />
           </div>
-          <button type="submit" className="login-btn2">Login</button>
+            <div className="input-group">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="signup-btn2">Create Account</button>
         </form>
-        <div className="login-footer">
-          <a href="/signuppage" className="sign-up">Sign Up</a>
-          <a href="/forgot-password" className="forgot-password">Forgot password?</a>
+        <div className="signup-footer">
+          <a href="/loginpage" className="sign-up">Login</a>
+          
         </div>
       </div>
       <div className="image-container">
         <img src="/src/assets/login_image.jpg" alt="login background" />
       </div>
     </div>
+
+
     );
 };
- export default Loginpage;
+export default Signuppage;

@@ -8,7 +8,7 @@ import Aboutuspage from './Pages/aboutuspage';
 import Timetablepage from './Pages/timetablepage';
 import Attendancepage from './Pages/attendancepage';
 import ExamsQuizpage from './Pages/examsquizpage';
-
+import Signuppage from './Pages/signuppage';
 function App() {
   return (
     <>
@@ -23,6 +23,7 @@ function App() {
           <Route path='/timetablepage' element={< Timetablepage/>}/>
           <Route path ='/attendancepage' element={<Attendancepage/>}/>
           <Route path ='/examsquizpage'  element={<ExamsQuizpage/>}/>
+          <Route path='/signuppage' element={< Signuppage/>}/>
       </Routes>
        
       <Footer/>
