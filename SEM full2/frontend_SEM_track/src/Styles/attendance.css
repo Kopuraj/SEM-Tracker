@@ -1,0 +1,513 @@
+.attendance-page {
+  background: linear-gradient(180deg, #9333ea, #ec4899);
+  color: white;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+}
+
+/* Main layout */
+.main {
+  padding: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Left section */
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.image-container-left {
+  display: flex;
+  justify-content: center;
+}
+
+.main-image1 {
+  width: 80%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  height: auto;
+}
+
+/* Right section */
+.right-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.main_text1 {
+  text-align: right;
+  padding: 1rem;
+}
+
+.main_text1 h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: right;
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.main_text1 h2 {
+  font-weight: normal;
+  font-size: 1.3rem;
+  text-align: right;
+  line-height: 1.5;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.image-container-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.main-image2 {
+  width: 80%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  height: auto;
+}
+
+/* Buttons */
+.attendancepage_buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.Att_page_button1,
+.Att_page_button2,
+.Att_page_button3 {
+  background-color: #0cd778;
+  border: none;
+  color: black;
+  padding: 12px 24px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 25px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  width: 140px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.Att_page_button1:hover, 
+.Att_page_button2:hover,
+.Att_page_button3:hover {
+  color: #350cd7;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.Att_page_button1.active,
+.Att_page_button2.active,
+.Att_page_button3.active {
+  background-color: #28a745;
+  transform: scale(1.05);
+}
+
+.star {
+  margin-right: 8px;
+}
+
+.arrow {
+  margin-left: 8px;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  color: #333;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.modal-buttons button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.modal-buttons button[type="button"] {
+  background-color: #6c757d;
+  color: white;
+}
+
+.modal-buttons button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Table styles */
+.attendance-list {
+  margin: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.attendance-list h2 {
+  color: white;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.attendance-table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.attendance-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.attendance-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Success and error messages */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 4px;
+  border: 1px solid #c3e6cb;
+  text-align: center;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: white;
+  font-size: 1.2rem;
+}
+
+/* Attendance Summary Styles */
+.attendance-summary {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.attendance-summary h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+
+.summary-card h4 {
+  color: white;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.big-number {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Subject-wise Attendance Styles */
+.subject-attendance-summary {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.subject-attendance-summary h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.subject-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.subject-card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  backdrop-filter: blur(5px);
+}
+
+.subject-card.eligible {
+  border-color: #28a745;
+}
+
+.subject-card.not-eligible {
+  border-color: #dc3545;
+}
+
+.subject-card h4 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.subject-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat .label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.stat .value {
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.stat .status.passed {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.stat .status.failed {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Edit/Delete buttons */
+.edit-btn, .delete-btn {
+  padding: 0.5rem 0.8rem;
+  margin: 0 0.25rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.edit-btn:disabled, .delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.warning-message {
+  background-color: rgba(255, 243, 205, 0.9);
+  color: #856404;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+  text-align: center;
+  border: 1px solid #ffeaa7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .main_text1 h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .main_text1 h2 {
+    text-align: center;
+  }
+  
+  .main-image1,
+  .main-image2 {
+    
+    height: 500px;
+    width: 500px;
+  }
+  
+  .image-container-left,
+  .image-container-right {
+    justify-content: center;
+    width: 50%;
+  }
+  
+  .attendancepage_buttons {
+    align-items: center;
+  }
+  
+  .attendance-list {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  
+  .modal {
+    width: 95%;
+    padding: 1rem;
+  }
+  
+  .attendance-table th,
+  .attendance-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .subject-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+}

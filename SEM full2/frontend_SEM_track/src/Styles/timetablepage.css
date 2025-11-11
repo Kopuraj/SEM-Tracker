@@ -1,0 +1,588 @@
+/* timetablepage.css */
+
+/* Main container */
+.timetable-container2 {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #d153dad3;
+}
+
+/* Image and text container */
+.image_text-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  color: white;
+}
+
+.text-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.text-container p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.image-container {
+  flex-shrink: 0;
+}
+
+.timetable-image {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Messages */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin: 15px 0;
+  border: 1px solid #c3e6cb;
+  text-align: center;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin: 15px 0;
+  border: 1px solid #f5c6cb;
+  text-align: center;
+}
+
+/* Button container */
+.button-container {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button.add {
+  background-color: #28a745;
+  color: white;
+}
+
+.button.add:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.button.update {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.button.update:hover {
+  background-color: #e0a800;
+  transform: translateY(-2px);
+}
+
+/* View dropdown */
+.view-dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin: 15px 0;
+}
+
+.button1 {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button1:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.star {
+  margin-right: 8px;
+}
+
+.arrow {
+  margin-left: 8px;
+}
+
+.view-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  z-index: 100;
+  width: 180px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 5px;
+}
+
+.view-options button {
+  display: block;
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.view-options button:hover {
+  background-color: #f8f9fa;
+}
+
+.view-options button:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.view-options button:last-child {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Timetable list */
+.timetable-list {
+  margin: 30px 0;
+  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.timetable-list h2 {
+  margin-bottom: 20px;
+  color: #343a40;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.timetable-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.timetable-table th,
+.timetable-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.timetable-table th {
+  background-color: #e9ecef;
+  font-weight: 600;
+  color: #495057;
+}
+
+.timetable-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.timetable-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Action buttons */
+.edit-btn, .delete-btn {
+  padding: 8px 15px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.edit-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #138496;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #343a40;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Modal buttons */
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.modal-buttons button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.modal-buttons button:first-child {
+  background-color: #6c757d;
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: #5a6268;
+}
+
+.modal-buttons button:last-child {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: #0069d9;
+}
+
+.modal-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading and empty states */
+.timetable-list p {
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.1rem;
+  padding: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .image_text-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .text-container h1 {
+    font-size: 2rem;
+  }
+  
+  .timetable-image {
+    width: 100%;
+    max-width: 300px;
+    margin-top: 20px;
+  }
+  
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .button {
+    width: 200px;
+  }
+  
+  .timetable-table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .modal {
+    padding: 20px;
+    margin: 10px;
+  }
+  
+  .modal-buttons {
+    flex-direction: column;
+  }
+  
+  .modal-buttons button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .timetable-container2 {
+    padding: 10px;
+  }
+  
+  .text-container h1 {
+    font-size: 1.8rem;
+  }
+  
+  .text-container p {
+    font-size: 1rem;
+  }
+  
+  .timetable-list {
+    padding: 15px;
+  }
+  
+  .timetable-table th,
+  .timetable-table td {
+    padding: 10px;
+  }
+  
+  .edit-btn, .delete-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Enhanced Styles for Special Schedules */
+
+/* View buttons */
+.view-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-left: 20px;
+}
+
+.view-buttons .button {
+  background-color: #6c757d;
+  color: white;
+  font-size: 0.9rem;
+  padding: 10px 15px;
+}
+
+.view-buttons .button.active {
+  background-color: #007bff;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.view-buttons .button:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+.view-buttons .button.active:hover {
+  background-color: #0056b3;
+}
+
+/* Special schedule table row */
+.special-schedule {
+  background-color: #fff3cd !important;
+  border-left: 4px solid #ffc107;
+}
+
+.special-schedule:hover {
+  background-color: #ffeaa7 !important;
+}
+
+/* Special date display */
+.special-date {
+  font-weight: bold;
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+.day-name {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Description text */
+.description {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* Badges */
+.special-badge {
+  background-color: #ffc107;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.regular-badge {
+  background-color: #17a2b8;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* Schedule type options in modal */
+.schedule-type-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.radio-option:hover {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.radio-option input[type="radio"] {
+  margin: 0;
+  transform: scale(1.2);
+}
+
+.radio-option input[type="radio"]:checked + span {
+  font-weight: bold;
+}
+
+/* Enhanced button container */
+.button-container {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive adjustments for new features */
+@media (max-width: 768px) {
+  .view-buttons {
+    margin-left: 0;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  
+  .view-buttons .button {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+  }
+  
+  .schedule-type-options {
+    gap: 8px;
+  }
+  
+  .radio-option {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}
