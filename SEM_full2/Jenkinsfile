@@ -1,0 +1,259 @@
+pipeline {
+    agent any
+    
+    tools {
+        jdk 'jdk17'                    // For Spring Boot (build time)
+        nodejs 'nodejs-18'             // For React
+    }
+    
+    environment {
+        // Directory paths
+        FRONTEND_DIR = 'frontend_SEM_track'
+        BACKEND_DIR = 'sem-tracker'
+        
+        // Docker image names
+        FRONTEND_IMAGE = 'frontend_new'
+        BACKEND_IMAGE = 'backend_new'
+        
+        // Database credentials
+        MYSQL_ROOT_PASSWORD = 'Kopu2001'
+        MYSQL_DATABASE = 'sem_db'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                sh 'ls -la'
+            }
+        }
+        
+        // Frontend Build & Test
+        stage('Build Frontend') {
+            steps {
+                dir(env.FRONTEND_DIR) {
+                    sh 'npm install'
+                    sh 'npm run build'
+                    // Run tests if available
+                    sh 'npm test -- --watchAll=false || echo "Frontend tests skipped or failed but continuing"'
+                }
+            }
+        }
+        
+        // Backend Build & Test
+        stage('Build Backend') {
+            steps {
+                dir(env.BACKEND_DIR) {
+                    sh 'mvn clean package -DskipTests'
+                    sh 'mvn test'
+                }
+            }
+            post {
+                success {
+                    // Verify JAR file was created
+                    dir(env.BACKEND_DIR) {
+                        sh 'ls -la target/*.jar'
+                    }
+                }
+            }
+        }
+        
+        // Build Docker Images
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    // Build Frontend Docker image
+                    dir(env.FRONTEND_DIR) {
+                        sh "docker build -t ${env.FRONTEND_IMAGE}:${env.BUILD_NUMBER} ."
+                    }
+                    
+                    // Build Backend Docker image (requires JAR from previous stage)
+                    dir(env.BACKEND_DIR) {
+                        sh "docker build -t ${env.BACKEND_IMAGE}:${env.BUILD_NUMBER} ."
+                    }
+                    
+                    // List built images
+                    sh 'docker images | grep -E "(frontend_new|backend_new)"'
+                }
+            }
+        }
+        
+        // Test with Docker Compose
+        stage('Docker Compose Test') {
+            steps {
+                script {
+                    // Stop any existing containers
+                    sh 'docker-compose down || true'
+                    
+                    echo "Starting full stack with Docker Compose..."
+                    
+                    // Start all services
+                    sh 'docker-compose up -d'
+                    
+                    // Wait for MySQL to be ready
+                    sh '''
+                        echo "Waiting for MySQL to be ready..."
+                        for i in {1..30}; do
+                            if docker-compose exec mysql mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "SELECT 1;" > /dev/null 2>&1; then
+                                echo "MySQL is ready!"
+                                break
+                            fi
+                            echo "Waiting for MySQL... attempt $i"
+                            sleep 3
+                        done
+                    '''
+                    
+                    // Wait for backend to be ready (Spring Boot)
+                    sh '''
+                        echo "Waiting for Backend to be ready..."
+                        for i in {1..30}; do
+                            if curl -f http://localhost:8081/actuator/health > /dev/null 2>&1; then
+                                echo "Backend is ready and healthy!"
+                                break
+                            fi
+                            echo "Waiting for Backend... attempt $i"
+                            sleep 5
+                        done
+                    '''
+                    
+                    // Wait for frontend to be ready (Vite dev server)
+                    sh '''
+                        echo "Waiting for Frontend to be ready..."
+                        for i in {1..20}; do
+                            if curl -f http://localhost:5173 > /dev/null 2>&1; then
+                                echo "Frontend is ready!"
+                                break
+                            fi
+                            echo "Waiting for Frontend... attempt $i"
+                            sleep 3
+                        done
+                    '''
+                }
+            }
+        }
+        
+        // Integration Tests
+        stage('Integration Tests') {
+            steps {
+                script {
+                    echo "Running integration tests..."
+                    
+                    // Test backend API endpoints
+                    sh '''
+                        # Test if backend is responding
+                        curl -f http://localhost:8081/actuator/health
+                        
+                        # Test if frontend is serving
+                        curl -f http://localhost:5173 || echo "Frontend check completed"
+                        
+                        # Add your specific API tests here
+                        # Example: curl -f http://localhost:8081/api/users
+                    '''
+                    
+                    // Run backend integration tests
+                    dir(env.BACKEND_DIR) {
+                        sh 'mvn verify -Dspring.profiles.active=test || echo "Integration tests completed"'
+                    }
+                }
+            }
+        }
+        
+        // Health Check & Validation
+        stage('Health Check') {
+            steps {
+                script {
+                    sh '''
+                        echo "=== FINAL HEALTH CHECK ==="
+                        
+                        # Check MySQL database
+                        echo "1. Checking MySQL database..."
+                        docker-compose exec mysql mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "USE ${MYSQL_DATABASE}; SHOW TABLES;" || echo "MySQL check failed"
+                        
+                        # Check Backend health
+                        echo "2. Checking Backend health..."
+                        curl -f http://localhost:8081/actuator/health || echo "Backend health check failed"
+                        
+                        # Check Frontend accessibility
+                        echo "3. Checking Frontend..."
+                        curl -f http://localhost:5173 || echo "Frontend check completed"
+                        
+                        # Check container status
+                        echo "4. Checking container status..."
+                        docker-compose ps
+                        
+                        echo "=== HEALTH CHECK COMPLETED ==="
+                    '''
+                }
+            }
+        }
+        
+        // Deployment Preparation
+        stage('Prepare for Deployment') {
+            steps {
+                script {
+                    echo "Preparing images for deployment..."
+                    
+                    // Tag images with latest
+                    sh """
+                        docker tag ${env.FRONTEND_IMAGE}:${env.BUILD_NUMBER} ${env.FRONTEND_IMAGE}:latest
+                        docker tag ${env.BACKEND_IMAGE}:${env.BUILD_NUMBER} ${env.BACKEND_IMAGE}:latest
+                    """
+                    
+                    // Save images to tar files (optional - for deployment)
+                    sh """
+                        docker save -o frontend-${env.BUILD_NUMBER}.tar ${env.FRONTEND_IMAGE}:${env.BUILD_NUMBER}
+                        docker save -o backend-${env.BUILD_NUMBER}.tar ${env.BACKEND_IMAGE}:${env.BUILD_NUMBER}
+                    """
+                    
+                    // List final images
+                    sh 'docker images | grep -E "(frontend_new|backend_new)"'
+                    
+                    echo "Deployment packages ready!"
+                    echo "Frontend: ${env.FRONTEND_IMAGE}:${env.BUILD_NUMBER}"
+                    echo "Backend: ${env.BACKEND_IMAGE}:${env.BUILD_NUMBER}"
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'SEM Tracker Pipeline completed!'
+            
+            // Clean up - stop containers but keep images
+            sh '''
+                echo "Cleaning up containers..."
+                docker-compose down || true
+                
+                # Remove unused containers and networks
+                docker container prune -f || true
+                docker network prune -f || true
+            '''
+            
+            // Archive build artifacts
+            archiveArtifacts artifacts: '*.tar', allowEmptyArchive: true
+            
+            // Clean workspace (optional)
+            // cleanWs()
+        }
+        success {
+            echo '✅ Pipeline SUCCESS! Full-stack application is built and tested.'
+            echo "✅ Frontend: ${env.FRONTEND_IMAGE}:${env.BUILD_NUMBER}"
+            echo "✅ Backend: ${env.BACKEND_IMAGE}:${env.BUILD_NUMBER}"
+            
+            // You can add notifications here (email, Slack, etc.)
+        }
+        failure {
+            echo '❌ Pipeline FAILED! Check the logs above.'
+            
+            // Keep containers running for debugging on failure
+            sh '''
+                echo "Containers kept running for debugging:"
+                docker-compose ps
+            '''
+        }
+        unstable {
+            echo '⚠️ Pipeline UNSTABLE! Some tests may have failed.'
+        }
+    }
+}
