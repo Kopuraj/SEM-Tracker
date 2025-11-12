@@ -1,0 +1,35 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Kopu2001
+      MYSQL_DATABASE: sem_db
+    # command: --default-authentication-plugin=mysql_native_password  # ← MOVED OUTSIDE environment
+    ports:
+      - "3306:3306"
+    
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    
+
+  backend:
+    image: backend_new
+    container_name: backend_container_new
+    depends_on:
+      - mysql
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sem_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Kopu2001
+
+  frontend:
+    image: frontend_new
+    container_name: frontend_container_new
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
