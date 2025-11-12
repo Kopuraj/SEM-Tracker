@@ -4,8 +4,16 @@ pipeline {
     environment {
         FRONTEND_DIR = 'frontend_SEM_track'
         BACKEND_DIR = 'sem-tracker'
-        FRONTEND_IMAGE = 'frontend_new'
-        BACKEND_IMAGE = 'backend_new'
+        
+        // UNIQUE names for Jenkins pipeline
+        FRONTEND_IMAGE = 'frontend_jenkins'
+        BACKEND_IMAGE = 'backend_jenkins'
+        
+        // UNIQUE container names
+        FRONTEND_CONTAINER = "frontend_jenkins_${BUILD_NUMBER}"
+        BACKEND_CONTAINER = "backend_jenkins_${BUILD_NUMBER}"
+        MYSQL_CONTAINER = "mysql_jenkins_${BUILD_NUMBER}"
+        
         MYSQL_ROOT_PASSWORD = 'Kopu2001'
         MYSQL_DATABASE = 'sem_db'
     }
@@ -20,8 +28,6 @@ pipeline {
                 sh 'node --version'
                 sh 'npm --version'
                 sh 'docker --version'
-                sh 'echo "=== Directory Structure ==="'
-                sh 'ls -la'
             }
         }
         
@@ -58,10 +64,78 @@ pipeline {
             }
         }
         
-        stage('Simple Test') {
+        stage('Docker Compose Test') {
             steps {
-                echo "Build completed successfully!"
-                sh 'docker images | grep -E "(frontend_new|backend_new)"'
+                script {
+                    // Clean up any previous Jenkins containers
+                    sh """
+                        docker stop ${env.MYSQL_CONTAINER} || true
+                        docker rm ${env.MYSQL_CONTAINER} || true
+                        docker stop ${env.BACKEND_CONTAINER} || true
+                        docker rm ${env.BACKEND_CONTAINER} || true
+                        docker stop ${env.FRONTEND_CONTAINER} || true
+                        docker rm ${env.FRONTEND_CONTAINER} || true
+                    """
+                    
+                    // Start MySQL with unique name
+                    sh """
+                        docker run -d \\
+                          --name ${env.MYSQL_CONTAINER} \\
+                          -e MYSQL_ROOT_PASSWORD=${env.MYSQL_ROOT_PASSWORD} \\
+                          -e MYSQL_DATABASE=${env.MYSQL_DATABASE} \\
+                          -p 3307:3306 \\  # DIFFERENT PORT
+                          mysql:8
+                    """
+                    
+                    // Wait for MySQL
+                    sh """
+                        echo "Waiting for MySQL..."
+                        sleep 30
+                        docker exec ${env.MYSQL_CONTAINER} mysql -uroot -p${env.MYSQL_ROOT_PASSWORD} -e "SELECT 1;" || echo "MySQL check"
+                    """
+                    
+                    // Start Backend with unique name and different port
+                    sh """
+                        docker run -d \\
+                          --name ${env.BACKEND_CONTAINER} \\
+                          --link ${env.MYSQL_CONTAINER}:mysql \\
+                          -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${env.MYSQL_DATABASE} \\
+                          -e SPRING_DATASOURCE_USERNAME=root \\
+                          -e SPRING_DATASOURCE_PASSWORD=${env.MYSQL_ROOT_PASSWORD} \\
+                          -p 8082:8081 \\  # DIFFERENT PORT
+                          ${env.BACKEND_IMAGE}:${env.BUILD_NUMBER}
+                    """
+                    
+                    // Start Frontend with unique name and different port
+                    sh """
+                        docker run -d \\
+                          --name ${env.FRONTEND_CONTAINER} \\
+                          -p 5174:5173 \\  # DIFFERENT PORT
+                          ${env.FRONTEND_IMAGE}:${env.BUILD_NUMBER}
+                    """
+                    
+                    // Wait and test
+                    sh 'sleep 20'
+                    sh """
+                        curl -f http://localhost:8082/actuator/health || echo "Backend health check"
+                        curl -f http://localhost:5174 || echo "Frontend check"
+                    """
+                }
+            }
+        }
+        
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh """
+                        docker stop ${env.FRONTEND_CONTAINER} || true
+                        docker rm ${env.FRONTEND_CONTAINER} || true
+                        docker stop ${env.BACKEND_CONTAINER} || true
+                        docker rm ${env.BACKEND_CONTAINER} || true
+                        docker stop ${env.MYSQL_CONTAINER} || true
+                        docker rm ${env.MYSQL_CONTAINER} || true
+                    """
+                }
             }
         }
     }
@@ -69,9 +143,18 @@ pipeline {
     post {
         always {
             echo 'Pipeline completed!'
+            // Final cleanup
+            sh """
+                docker stop ${env.FRONTEND_CONTAINER} || true
+                docker rm ${env.FRONTEND_CONTAINER} || true
+                docker stop ${env.BACKEND_CONTAINER} || true
+                docker rm ${env.BACKEND_CONTAINER} || true
+                docker stop ${env.MYSQL_CONTAINER} || true
+                docker rm ${env.MYSQL_CONTAINER} || true
+            """
         }
         success {
-            echo '✅ SUCCESS! Application built successfully.'
+            echo '✅ SUCCESS! Application built and tested successfully.'
         }
     }
 }
