@@ -2,32 +2,40 @@ pipeline {
     agent any
     
     stages {
-        stage('Checkout') {
+        stage('Build Frontend') {
             steps {
-                checkout scm
+                dir('SEM_full2/frontend_SEM_track') {
+                    sh 'npm install && npm run build'
+                }
             }
         }
         
-        stage('Build and Deploy') {
+        stage('Build Backend') {
+            steps {
+                dir('SEM_full2/sem-tracker') {
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+        
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    dir('SEM_full2/frontend_SEM_track') {
+                        sh 'docker build -t frontend_new .'
+                    }
+                    dir('SEM_full2/sem-tracker') {
+                        sh 'docker build -t backend_new .'
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy') {
             steps {
                 dir('SEM_full2') {
-                    sh '''
-                        # Build frontend
-                        cd frontend_SEM_track && npm install && npm run build
-                        
-                        # Build backend
-                        cd ../sem-tracker && mvn clean package -DskipTests
-                        
-                        # Build Docker images
-                        cd ../frontend_SEM_track && docker build -t frontend_new .
-                        cd ../sem-tracker && docker build -t backend_new .
-                        
-                        # Deploy
-                        docker-compose down -v || true
-                        docker-compose up -d
-                        
-                        echo "🚀 Deployment completed!"
-                    '''
+                    sh 'docker-compose down -v || true'
+                    sh 'docker-compose up -d'
                 }
             }
         }
@@ -35,7 +43,7 @@ pipeline {
     
     post {
         success {
-            echo '✅ Application deployed successfully!'
+            echo '✅ SEM Tracker deployed successfully!'
         }
     }
 }
