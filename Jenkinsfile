@@ -3,16 +3,32 @@ pipeline {
 
     environment {
         BUILD_TAG = "${env.BUILD_NUMBER}"
-        FRONTEND_IMAGE = "frontend_new:${BUILD_TAG}"
-        BACKEND_IMAGE = "backend_new:${BUILD_TAG}"
+        COMPOSE_PROJECT_NAME = "sem-tracker"
     }
 
     stages {
+        stage('Cleanup Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', 
+                    url: 'https://github.com/Kopuraj/SEM-Tracker.git'
+            }
+        }
+
         stage('Build Frontend') {
             steps {
                 dir('SEM_full2/frontend_SEM_track') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    sh '''
+                        echo "Installing frontend dependencies..."
+                        npm install
+                        echo "Building frontend..."
+                        npm run build
+                    '''
                 }
             }
         }
@@ -20,43 +36,75 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('SEM_full2/sem-tracker') {
-                    sh 'mvn clean package -DskipTests'
+                    sh '''
+                        echo "Building backend with Maven..."
+                        mvn clean package -DskipTests
+                    '''
                 }
             }
         }
 
         stage('Build Docker Images') {
             steps {
-                script {
-                    dir('SEM_full2/frontend_SEM_track') {
-                        sh "docker build -t ${FRONTEND_IMAGE} ."
-                    }
-                    dir('SEM_full2/sem-tracker') {
-                        sh "docker build -t ${BACKEND_IMAGE} ."
-                    }
+                dir('SEM_full2') {
+                    sh '''
+                        echo "Building Docker images using Docker Compose..."
+                        docker compose build --no-cache
+                    '''
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Stop Old Containers') {
             steps {
                 dir('SEM_full2') {
-                    sh 'docker compose down -v || true' // or use docker-compose if that's your setup
-                    sh 'docker compose up -d'          // same as above, use docker-compose if needed
+                    sh '''
+                        echo "Stopping and removing old containers..."
+                        docker compose down -v || true
+                    '''
                 }
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                dir('SEM_full2') {
+                    sh '''
+                        echo "Starting containers with Docker Compose..."
+                        docker compose up -d
+                        echo "Waiting for services to be healthy..."
+                        sleep 15
+                        docker compose ps
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                    echo "Checking running containers..."
+                    docker ps --filter "name=sem"
+                    echo "Checking logs..."
+                    docker logs backend_container_new --tail 50 || true
+                '''
             }
         }
     }
 
     post {
         always {
-            echo '--- Pipeline finished ---'
+            echo '--- Pipeline Execution Finished ---'
         }
         success {
             echo '✅ SEM Tracker deployed successfully!'
+            echo 'Frontend: http://localhost:5173'
+            echo 'Backend: http://localhost:8081'
+            echo 'MySQL: localhost:3306'
         }
         failure {
-            echo '❌ Pipeline failed. Check logs.'
+            echo '❌ Pipeline failed. Check logs above.'
+            sh 'docker compose logs || true'
         }
     }
 }
