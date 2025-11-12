@@ -8,26 +8,27 @@ pipeline {
             }
         }
         
-        stage('Build Frontend') {
+        stage('Build and Deploy') {
             steps {
-                dir('frontend_SEM_track') {
-                    sh 'npm install && npm run build'
+                dir('SEM_full2') {
+                    sh '''
+                        # Build frontend
+                        cd frontend_SEM_track && npm install && npm run build
+                        
+                        # Build backend
+                        cd ../sem-tracker && mvn clean package -DskipTests
+                        
+                        # Build Docker images
+                        cd ../frontend_SEM_track && docker build -t frontend_new .
+                        cd ../sem-tracker && docker build -t backend_new .
+                        
+                        # Deploy
+                        docker-compose down -v || true
+                        docker-compose up -d
+                        
+                        echo "🚀 Deployment completed!"
+                    '''
                 }
-            }
-        }
-        
-        stage('Build Backend') {
-            steps {
-                dir('sem-tracker') {
-                    sh 'mvn clean package -DskipTests'
-                }
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                sh 'docker-compose down -v || true'
-                sh 'docker-compose up -d --build'
             }
         }
     }
