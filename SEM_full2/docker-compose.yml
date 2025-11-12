@@ -6,15 +6,16 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: Kopu2001
       MYSQL_DATABASE: sem_db
-    # command: --default-authentication-plugin=mysql_native_password  # ← MOVED OUTSIDE environment
+    command: --default-authentication-plugin=mysql_native_password
     ports:
       - "3306:3306"
-    
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    
 
   backend:
+    build: 
+      context: ./sem-tracker
+      dockerfile: Dockerfile
     image: backend_new
     container_name: backend_container_new
     depends_on:
@@ -27,6 +28,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: Kopu2001
 
   frontend:
+    build:
+      context: ./frontend_SEM_track
+      dockerfile: Dockerfile
     image: frontend_new
     container_name: frontend_container_new
     ports:
