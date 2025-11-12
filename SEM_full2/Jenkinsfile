@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Tag Docker images for this build (optional)
         BUILD_TAG = "${env.BUILD_NUMBER}"
         FRONTEND_IMAGE = "frontend_new:${BUILD_TAG}"
         BACKEND_IMAGE = "backend_new:${BUILD_TAG}"
@@ -42,8 +41,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 dir('SEM_full2') {
-                    sh 'docker compose down -v || true'
-                    sh 'docker compose up -d'
+                    sh 'docker compose down -v || true' // or use docker-compose if that's your setup
+                    sh 'docker compose up -d'          // same as above, use docker-compose if needed
                 }
             }
         }
