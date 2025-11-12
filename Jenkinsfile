@@ -20,12 +20,18 @@ pipeline {
             }
         }
 
-        stage('Build Frontend') {
+        stage('Build Frontend with Docker') {
+            agent {
+                docker {
+                    image 'node:20-alpine'
+                    args '-v $HOME/.npm:/root/.npm'
+                }
+            }
             steps {
                 dir('SEM_full2/frontend_SEM_track') {
                     sh '''
                         echo "Installing frontend dependencies..."
-                        npm install
+                        npm ci --silent
                         echo "Building frontend..."
                         npm run build
                     '''
@@ -33,7 +39,13 @@ pipeline {
             }
         }
 
-        stage('Build Backend') {
+        stage('Build Backend with Docker') {
+            agent {
+                docker {
+                    image 'maven:3.8-openjdk-17'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
                 dir('SEM_full2/sem-tracker') {
                     sh '''
@@ -85,8 +97,6 @@ pipeline {
                 sh '''
                     echo "Checking running containers..."
                     docker ps --filter "name=sem"
-                    echo "Checking logs..."
-                    docker logs backend_container_new --tail 50 || true
                 '''
             }
         }
@@ -104,7 +114,7 @@ pipeline {
         }
         failure {
             echo '❌ Pipeline failed. Check logs above.'
-            sh 'docker compose logs || true'
+            sh 'docker compose -f SEM_full2/docker-compose.yml logs || true'
         }
     }
 }
