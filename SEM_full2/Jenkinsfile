@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     tools {
-        jdk 'jdk17'                    // For Spring Boot (build time)
-        nodejs 'nodejs-18'             // For React
+         jdk 'java 21'                      // For Spring Boot (build time)
+        // nodejs 'nodejs-18'             // For React
     }
     
     environment {
