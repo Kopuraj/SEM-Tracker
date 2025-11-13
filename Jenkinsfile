@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         COMPOSE_PROJECT_NAME = "sem-tracker"
+        DOCKER_HUB_REPO = "sem_track_hub"
     }
 
     stages {
@@ -17,8 +18,13 @@ pipeline {
             steps {
                 dir('SEM_full2') {
                     sh '''
-                        echo "Stopping old containers if any..."
+                        echo "Stopping and removing old containers..."
                         docker compose down -v || true
+                        
+                        echo "Force removing any leftover containers..."
+                        docker rm -f mysql_container || true
+                        docker rm -f backend_container_new || true
+                        docker rm -f frontend_container_new || true
                     '''
                 }
             }
@@ -37,6 +43,37 @@ pipeline {
                         echo "Checking service status..."
                         docker compose ps
                     '''
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        sh '''
+                            echo "Logging in to Docker Hub..."
+                            echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin
+                            
+                            echo "Tagging images..."
+                            docker tag backend_new:latest ${DOCKER_USER}/${DOCKER_HUB_REPO}:backend
+                            docker tag frontend_new:latest ${DOCKER_USER}/${DOCKER_HUB_REPO}:frontend
+                            docker tag backend_new:latest ${DOCKER_USER}/${DOCKER_HUB_REPO}:backend-${BUILD_NUMBER}
+                            docker tag frontend_new:latest ${DOCKER_USER}/${DOCKER_HUB_REPO}:frontend-${BUILD_NUMBER}
+                            
+                            echo "Pushing images to Docker Hub..."
+                            docker push ${DOCKER_USER}/${DOCKER_HUB_REPO}:backend
+                            docker push ${DOCKER_USER}/${DOCKER_HUB_REPO}:frontend
+                            docker push ${DOCKER_USER}/${DOCKER_HUB_REPO}:backend-${BUILD_NUMBER}
+                            docker push ${DOCKER_USER}/${DOCKER_HUB_REPO}:frontend-${BUILD_NUMBER}
+                            
+                            echo "✅ Docker Hub push completed!"
+                        '''
+                    }
                 }
             }
         }
@@ -66,10 +103,15 @@ pipeline {
         success {
             echo '✅ SEM Tracker deployed successfully!'
             echo ''
+            echo '========================================='
             echo 'Access your application at:'
             echo '  Frontend: http://localhost:5173'
             echo '  Backend:  http://localhost:8081'
             echo '  MySQL:    localhost:3306'
+            echo ''
+            echo '✅ Docker images pushed to Docker Hub!'
+            echo '  Repository: ${DOCKER_HUB_REPO}'
+            echo '========================================='
         }
         failure {
             echo '❌ Pipeline failed!'
