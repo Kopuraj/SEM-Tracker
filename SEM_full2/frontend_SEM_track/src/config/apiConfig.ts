@@ -20,6 +20,10 @@ export const API_ENDPOINTS = {
   TIMETABLE: `${API_BASE_URL}/api/timetable`,
   TIMETABLE_TODAY: `${API_BASE_URL}/api/timetable/today`,
   TIMETABLE_SPECIAL: `${API_BASE_URL}/api/timetable/special`,
+  TIMETABLE_WEEK: `${API_BASE_URL}/api/timetable/week`,
+  TIMETABLE_UPCOMING: `${API_BASE_URL}/api/timetable/upcoming`,
+  TIMETABLE_FUTURE_SPECIAL: `${API_BASE_URL}/api/timetable/special/future`,
+  TIMETABLE_STATS: `${API_BASE_URL}/api/timetable/stats`,
   TIMETABLE_BY_DAY: (day: string) => `${API_BASE_URL}/api/timetable/day/${day}`,
   TIMETABLE_BY_ID: (id: string | number) => `${API_BASE_URL}/api/timetable/${id}`,
   

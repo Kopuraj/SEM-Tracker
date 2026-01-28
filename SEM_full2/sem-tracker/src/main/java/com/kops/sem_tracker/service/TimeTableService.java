@@ -231,4 +231,129 @@ public class TimeTableService {
     public boolean scheduleExistsExcludingId(TimeTable updatedEntity, Long id) {
         return false;
     }
+
+    // ========== USER-SPECIFIC SCHEDULE METHODS ==========
+
+    /**
+     * Get today's schedules for a specific user (both regular and special)
+     */
+    public List<TimeTable> getTodaySchedulesForUser(String username) {
+        LocalDate today = LocalDate.now();
+        String dayOfWeek = today.getDayOfWeek().toString();
+        String dateString = today.toString();
+
+        List<TimeTable> schedules = new ArrayList<>();
+
+        // Get user's regular schedules for today's day of week
+        List<TimeTable> regularSchedules = timetableRepository.findByUsernameAndDay(username, dayOfWeek)
+                .stream()
+                .filter(s -> !s.isSpecialSchedule())
+                .toList();
+        schedules.addAll(regularSchedules);
+
+        // Get user's special schedules for today's exact date
+        List<TimeTable> specialSchedules = timetableRepository.findBySpecialDate(dateString)
+                .stream()
+                .filter(s -> s.getUsername() != null && s.getUsername().equals(username))
+                .toList();
+        schedules.addAll(specialSchedules);
+
+        return schedules;
+    }
+
+    /**
+     * Get schedules for a specific user and day
+     */
+    public List<TimeTable> getSchedulesForUserAndDay(String username, String day) {
+        return timetableRepository.findByUsernameAndDay(username, day)
+                .stream()
+                .filter(s -> !s.isSpecialSchedule())
+                .toList();
+    }
+
+    /**
+     * Get upcoming schedules for a user (from today onwards)
+     */
+    public List<TimeTable> getUpcomingSchedulesForUser(String username, int days) {
+        LocalDate today = LocalDate.now();
+        LocalDate endDate = today.plusDays(days);
+
+        List<TimeTable> upcomingSchedules = new ArrayList<>();
+
+        LocalDate currentDate = today;
+        while (!currentDate.isAfter(endDate)) {
+            String dayOfWeek = currentDate.getDayOfWeek().toString();
+            String dateString = currentDate.toString();
+
+            // Get regular schedules for this day
+            List<TimeTable> regularSchedules = timetableRepository.findByUsernameAndDay(username, dayOfWeek)
+                    .stream()
+                    .filter(s -> !s.isSpecialSchedule())
+                    .toList();
+
+            // Add display date for context
+            for (TimeTable schedule : regularSchedules) {
+                schedule.setDisplayDate(dateString);
+            }
+            upcomingSchedules.addAll(regularSchedules);
+
+            // Get special schedules for this date
+            List<TimeTable> specialSchedules = timetableRepository.findBySpecialDate(dateString)
+                    .stream()
+                    .filter(s -> s.getUsername() != null && s.getUsername().equals(username))
+                    .toList();
+            upcomingSchedules.addAll(specialSchedules);
+
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return upcomingSchedules;
+    }
+
+    /**
+     * Get all special schedules for a user (future only)
+     */
+    public List<TimeTable> getFutureSpecialSchedulesForUser(String username) {
+        LocalDate today = LocalDate.now();
+        String todayString = today.toString();
+
+        return timetableRepository.findByIsSpecialScheduleTrue()
+                .stream()
+                .filter(s -> s.getUsername() != null && s.getUsername().equals(username))
+                .filter(s -> s.getSpecialDate() != null && s.getSpecialDate().compareTo(todayString) >= 0)
+                .toList();
+    }
+
+    /**
+     * Get week schedule for a user (next 7 days)
+     */
+    public List<TimeTable> getWeekScheduleForUser(String username) {
+        return getUpcomingSchedulesForUser(username, 7);
+    }
+
+    /**
+     * Check if user has any class on a specific date
+     */
+    public boolean hasClassOnDate(String username, String date) {
+        try {
+            LocalDate localDate = LocalDate.parse(date);
+            String dayOfWeek = localDate.getDayOfWeek().toString();
+
+            // Check regular schedules
+            List<TimeTable> regularSchedules = timetableRepository.findByUsernameAndDay(username, dayOfWeek);
+            if (!regularSchedules.isEmpty()) {
+                return true;
+            }
+
+            // Check special schedules
+            List<TimeTable> specialSchedules = timetableRepository.findBySpecialDate(date)
+                    .stream()
+                    .filter(s -> s.getUsername() != null && s.getUsername().equals(username))
+                    .toList();
+            
+            return !specialSchedules.isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

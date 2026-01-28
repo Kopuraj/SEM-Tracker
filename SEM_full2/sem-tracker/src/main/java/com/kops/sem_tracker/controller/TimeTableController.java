@@ -171,9 +171,17 @@ public class TimeTableController {
 
     /** ✅ GET TODAY'S TIMETABLE **/
     @GetMapping("/today")
-    public ResponseEntity<?> getToday() {
+    public ResponseEntity<?> getToday(@RequestParam(required = false) String username) {
         try {
-            System.out.println("🔍 GET TODAY Request");
+            System.out.println("🔍 GET TODAY Request - Username: " + username);
+            
+            if (username != null && !username.isBlank()) {
+                // Get today's schedule for specific user
+                var todayEntries = timetableService.getTodaySchedulesForUser(username);
+                System.out.println("📋 Found " + todayEntries.size() + " entries for today (user: " + username + ")");
+                return ResponseEntity.ok(todayEntries);
+            }
+            
             var todayEntries = timetableService.getTodaySchedules();
             System.out.println("📋 Found " + todayEntries.size() + " entries for today");
             return ResponseEntity.ok(todayEntries);
@@ -415,5 +423,118 @@ public class TimeTableController {
         }
 
         return null;
+    }
+
+    // ========== NEW ENHANCED ENDPOINTS ==========
+
+    /**
+     * Get upcoming schedules for a user (next N days)
+     */
+    @GetMapping("/upcoming")
+    public ResponseEntity<?> getUpcoming(
+            @RequestParam(required = true) String username,
+            @RequestParam(defaultValue = "7") int days) {
+        try {
+            System.out.println("🔍 GET UPCOMING Request - Username: " + username + ", Days: " + days);
+            
+            if (days < 1 || days > 30) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Days must be between 1 and 30"));
+            }
+            
+            var upcomingSchedules = timetableService.getUpcomingSchedulesForUser(username, days);
+            System.out.println("📋 Found " + upcomingSchedules.size() + " upcoming schedules");
+            return ResponseEntity.ok(upcomingSchedules);
+        } catch (Exception e) {
+            System.out.println("❌ GET UPCOMING Error: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Failed to fetch upcoming schedules: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Get week schedule for a user (next 7 days)
+     */
+    @GetMapping("/week")
+    public ResponseEntity<?> getWeek(@RequestParam(required = true) String username) {
+        try {
+            System.out.println("🔍 GET WEEK Request - Username: " + username);
+            var weekSchedule = timetableService.getWeekScheduleForUser(username);
+            System.out.println("📋 Found " + weekSchedule.size() + " entries for the week");
+            return ResponseEntity.ok(weekSchedule);
+        } catch (Exception e) {
+            System.out.println("❌ GET WEEK Error: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Failed to fetch week schedule: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Get future special schedules for a user
+     */
+    @GetMapping("/special/future")
+    public ResponseEntity<?> getFutureSpecial(@RequestParam(required = true) String username) {
+        try {
+            System.out.println("🔍 GET FUTURE SPECIAL Request - Username: " + username);
+            var futureSpecial = timetableService.getFutureSpecialSchedulesForUser(username);
+            System.out.println("📋 Found " + futureSpecial.size() + " future special schedules");
+            return ResponseEntity.ok(futureSpecial);
+        } catch (Exception e) {
+            System.out.println("❌ GET FUTURE SPECIAL Error: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Failed to fetch future special schedules: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Check if user has class on a specific date
+     */
+    @GetMapping("/check-date")
+    public ResponseEntity<?> checkDate(
+            @RequestParam(required = true) String username,
+            @RequestParam(required = true) String date) {
+        try {
+            System.out.println("🔍 CHECK DATE Request - Username: " + username + ", Date: " + date);
+            boolean hasClass = timetableService.hasClassOnDate(username, date);
+            return ResponseEntity.ok(Map.of(
+                "hasClass", hasClass,
+                "date", date,
+                "username", username
+            ));
+        } catch (Exception e) {
+            System.out.println("❌ CHECK DATE Error: " + e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid date format or error checking date: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Get statistics about user's timetable
+     */
+    @GetMapping("/stats")
+    public ResponseEntity<?> getStats(@RequestParam(required = true) String username) {
+        try {
+            System.out.println("🔍 GET STATS Request - Username: " + username);
+            
+            var allSchedules = timetableService.getAllForUser(username);
+            long regularCount = allSchedules.stream().filter(s -> !s.isSpecialSchedule()).count();
+            long specialCount = allSchedules.stream().filter(TimeTable::isSpecialSchedule).count();
+            long futureSpecialCount = timetableService.getFutureSpecialSchedulesForUser(username).size();
+            var todaySchedules = timetableService.getTodaySchedulesForUser(username);
+            
+            Map<String, Object> stats = Map.of(
+                "totalSchedules", allSchedules.size(),
+                "regularSchedules", regularCount,
+                "specialSchedules", specialCount,
+                "futureSpecialSchedules", futureSpecialCount,
+                "classesToday", todaySchedules.size()
+            );
+            
+            System.out.println("📊 Stats: " + stats);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            System.out.println("❌ GET STATS Error: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Failed to fetch statistics: " + e.getMessage()));
+        }
     }
 }

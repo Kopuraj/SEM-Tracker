@@ -22,12 +22,14 @@ const Timetablepage = () => {
   const [timetables, setTimetables] = useState<TimeTable[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<TimeTable | null>(null);
-  const [viewMode, setViewMode] = useState<'all' | 'today' | 'special' | 'day'>('today');
+  const [viewMode, setViewMode] = useState<'today' | 'week' | 'special' | 'day' | 'all'>('today');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [isSpecialSchedule, setIsSpecialSchedule] = useState(false);
   const [selectedDay, setSelectedDay] = useState<string>('');
+  const [stats, setStats] = useState<any>(null);
+  const [todayScheduleCount, setTodayScheduleCount] = useState(0);
 
   // Form state
   const [formData, setFormData] = useState<TimeTable>({
@@ -50,21 +52,22 @@ const Timetablepage = () => {
     try {
       let endpoint = API_ENDPOINTS.TIMETABLE;
       
-      if (viewMode === 'today') {
-        endpoint = API_ENDPOINTS.TIMETABLE_TODAY;
-      } else if (viewMode === 'special') {
-        endpoint = API_ENDPOINTS.TIMETABLE_SPECIAL;
-      } else if (viewMode === 'day' && selectedDay) {
-        endpoint = API_ENDPOINTS.TIMETABLE_BY_DAY(selectedDay);
-      }
-      
       const user = localStorage.getItem('user');
       const username = user ? (JSON.parse(user).username || 'default_user') : 'default_user';
 
-      // append username filter when available
-      const urlWithUser = endpoint.includes('?') ? `${endpoint}&username=${encodeURIComponent(username)}` : (endpoint.includes('/day/') || endpoint.includes('/today') || endpoint.includes('/special') ? `${endpoint}?username=${encodeURIComponent(username)}` : `${endpoint}?username=${encodeURIComponent(username)}`);
+      if (viewMode === 'today') {
+        endpoint = API_ENDPOINTS.TIMETABLE_TODAY + `?username=${encodeURIComponent(username)}`;
+      } else if (viewMode === 'week') {
+        endpoint = API_ENDPOINTS.TIMETABLE_WEEK + `?username=${encodeURIComponent(username)}`;
+      } else if (viewMode === 'special') {
+        endpoint = API_ENDPOINTS.TIMETABLE_FUTURE_SPECIAL + `?username=${encodeURIComponent(username)}`;
+      } else if (viewMode === 'day' && selectedDay) {
+        endpoint = API_ENDPOINTS.TIMETABLE_BY_DAY(selectedDay) + `?username=${encodeURIComponent(username)}`;
+      } else if (viewMode === 'all') {
+        endpoint = API_ENDPOINTS.TIMETABLE + `?username=${encodeURIComponent(username)}`;
+      }
 
-      const response = await fetch(urlWithUser, {
+      const response = await fetch(endpoint, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -74,26 +77,6 @@ const Timetablepage = () => {
       
       if (response.ok) {
         let data = await response.json();
-        
-        // For "all" view, show only today's active schedules
-        if (viewMode === 'all') {
-          const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-          data = data.filter((entry: TimeTable) => {
-            if (entry.specialSchedule && entry.specialDate) {
-              // Only show special schedules if they match today's date
-              return entry.specialDate === today;
-            }
-            // For regular schedules, check if they occur today
-            try {
-              const todayDate = new Date();
-              const todayDay = todayDate.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
-              return entry.day === todayDay;
-            } catch {
-              return true;
-            }
-          });
-        }
-        
         setTimetables(data);
       } else {
         const errorText = await response.text();
@@ -108,8 +91,33 @@ const Timetablepage = () => {
     }
   };
 
+  // Fetch statistics
+  const fetchStats = async () => {
+    try {
+      const user = localStorage.getItem('user');
+      const username = user ? (JSON.parse(user).username || 'default_user') : 'default_user';
+      
+      const response = await fetch(API_ENDPOINTS.TIMETABLE_STATS + `?username=${encodeURIComponent(username)}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        mode: 'cors'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data);
+        setTodayScheduleCount(data.classesToday || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
   useEffect(() => {
     fetchTimetables();
+    fetchStats();
   }, [viewMode, selectedDay]);
 
   // Handle form input changes
@@ -246,6 +254,7 @@ const Timetablepage = () => {
         setMessage(editingEntry ? 'Timetable updated successfully!' : 'Timetable added successfully!');
         handleCloseModal();
         fetchTimetables(); // Refresh the data
+        fetchStats(); // Refresh statistics
       } else {
         throw new Error(result.error || result.message || 'Operation failed');
       }
@@ -296,6 +305,7 @@ const Timetablepage = () => {
         const result = await response.json();
         setMessage(result.message || 'Timetable deleted successfully!');
         fetchTimetables();
+        fetchStats(); // Refresh statistics
       } else if (response.status === 404) {
         throw new Error('Timetable entry not found. It may have already been deleted.');
       } else {
@@ -379,6 +389,40 @@ const Timetablepage = () => {
         </div>
       </div>
 
+      {/* Statistics Dashboard */}
+      {stats && (
+        <div className="stats-dashboard">
+          <div className="stat-card today">
+            <div className="stat-icon">📅</div>
+            <div className="stat-content">
+              <div className="stat-value">{stats.classesToday}</div>
+              <div className="stat-label">Classes Today</div>
+            </div>
+          </div>
+          <div className="stat-card regular">
+            <div className="stat-icon">🔄</div>
+            <div className="stat-content">
+              <div className="stat-value">{stats.regularSchedules}</div>
+              <div className="stat-label">Regular Schedules</div>
+            </div>
+          </div>
+          <div className="stat-card special">
+            <div className="stat-icon">⭐</div>
+            <div className="stat-content">
+              <div className="stat-value">{stats.futureSpecialSchedules}</div>
+              <div className="stat-label">Upcoming Special</div>
+            </div>
+          </div>
+          <div className="stat-card total">
+            <div className="stat-icon">📊</div>
+            <div className="stat-content">
+              <div className="stat-value">{stats.totalSchedules}</div>
+              <div className="stat-label">Total Schedules</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Messages */}
       {message && <div className="success-message">{message}</div>}
       {error && <div className="error-message">{error}</div>}
@@ -390,7 +434,7 @@ const Timetablepage = () => {
           onClick={() => setIsModalOpen(true)}
           disabled={isLoading}
         >
-          {isLoading ? 'Loading...' : 'Add Schedule'}
+          {isLoading ? 'Loading...' : '➕ Add Schedule'}
         </button>
         
         <div className="view-buttons">
@@ -402,17 +446,17 @@ const Timetablepage = () => {
             }}
             disabled={isLoading}
           >
-            📅 Today
+            📅 Today {todayScheduleCount > 0 && `(${todayScheduleCount})`}
           </button>
           <button 
-            className={`button ${viewMode === 'all' ? 'active' : ''}`}
+            className={`button ${viewMode === 'week' ? 'active' : ''}`}
             onClick={() => {
-              setViewMode('all');
+              setViewMode('week');
               setSelectedDay('');
             }}
             disabled={isLoading}
           >
-            📋 All (Today's)
+            📆 This Week
           </button>
           <button 
             className={`button ${viewMode === 'special' ? 'active' : ''}`}
@@ -422,7 +466,17 @@ const Timetablepage = () => {
             }}
             disabled={isLoading}
           >
-            ⭐ Special
+            ⭐ Special Events
+          </button>
+          <button 
+            className={`button ${viewMode === 'all' ? 'active' : ''}`}
+            onClick={() => {
+              setViewMode('all');
+              setSelectedDay('');
+            }}
+            disabled={isLoading}
+          >
+            📋 All Schedules
           </button>
           <select 
             className="button day-selector"
@@ -433,7 +487,7 @@ const Timetablepage = () => {
             }}
             disabled={isLoading}
           >
-            <option value="">Select Day</option>
+            <option value="">📌 Select Day</option>
             <option value="MONDAY">Monday</option>
             <option value="TUESDAY">Tuesday</option>
             <option value="WEDNESDAY">Wednesday</option>
@@ -449,9 +503,10 @@ const Timetablepage = () => {
       <div className="timetable-list">
         <h2>
           {viewMode === 'today' ? `📅 Today's Schedule (${getCurrentDay()})` : 
-           viewMode === 'special' ? '⭐ Special Schedules' : 
+           viewMode === 'week' ? '📆 This Week\'s Schedule' :
+           viewMode === 'special' ? '⭐ Future Special Events' : 
            viewMode === 'day' ? `📋 ${selectedDay} Schedules` : 
-           '📋 Today\'s Active Schedules'}
+           '📋 All Your Schedules'}
         </h2>
         
         {isLoading ? (
