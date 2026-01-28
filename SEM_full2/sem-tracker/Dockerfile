@@ -5,12 +5,12 @@ WORKDIR /app
 # Copy only pom.xml first to cache dependencies
 COPY pom.xml .
 # Download dependencies (this layer will be cached)
-RUN mvn dependency:go-offline -B
+RUN mvn dependency:resolve dependency:resolve-plugins -B
 
 # Copy source code
 COPY src ./src
 # Build the application
-RUN mvn clean package -DskipTests -o
+RUN mvn clean package -DskipTests
 
 # Stage 2: Run with Java 21 JRE
 FROM eclipse-temurin:21-jre-alpine

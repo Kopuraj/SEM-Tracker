@@ -28,7 +28,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sem_db
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sem_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Kopu2001
     healthcheck:
