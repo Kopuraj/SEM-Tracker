@@ -21,6 +21,7 @@ services:
       dockerfile: Dockerfile
     image: backend_new
     container_name: backend_container_new
+    restart: always
     depends_on:
       mysql:
         condition: service_healthy
@@ -30,6 +31,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sem_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Kopu2001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   frontend:
     build:
@@ -37,7 +44,9 @@ services:
       dockerfile: Dockerfile
     image: frontend_new
     container_name: frontend_container_new
+    restart: always
     ports:
       - "5173:5173"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
