@@ -6,11 +6,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: Kopu2001
       MYSQL_DATABASE: sem_db
-    command: --default-authentication-plugin=mysql_native_password
+    # command: --default-authentication-plugin=mysql_native_password
     ports:
       - "3306:3306"
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: 
@@ -19,7 +22,8 @@ services:
     image: backend_new
     container_name: backend_container_new
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "8081:8081"
     environment:

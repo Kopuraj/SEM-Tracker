@@ -1,5 +1,6 @@
 import '../Styles/timetablepage.css';
 import { useState, useEffect } from 'react';
+import { API_ENDPOINTS } from '../config/apiConfig';
 
 interface TimeTable {
   id?: number;
@@ -47,14 +48,14 @@ const Timetablepage = () => {
     setIsLoading(true);
     setError('');
     try {
-      let endpoint = 'http://localhost:8080/api/timetable';
+      let endpoint = API_ENDPOINTS.TIMETABLE;
       
       if (viewMode === 'today') {
-        endpoint = 'http://localhost:8080/api/timetable/today';
+        endpoint = API_ENDPOINTS.TIMETABLE_TODAY;
       } else if (viewMode === 'special') {
-        endpoint = 'http://localhost:8080/api/timetable/special';
+        endpoint = API_ENDPOINTS.TIMETABLE_SPECIAL;
       } else if (viewMode === 'day' && selectedDay) {
-        endpoint = `http://localhost:8080/api/timetable/day/${selectedDay}`;
+        endpoint = API_ENDPOINTS.TIMETABLE_BY_DAY(selectedDay);
       }
       
       const user = localStorage.getItem('user');
@@ -213,8 +214,8 @@ const Timetablepage = () => {
       }
 
       const url = editingEntry && editingEntry.id
-        ? `http://localhost:8080/api/timetable/${editingEntry.id}`
-        : 'http://localhost:8080/api/timetable';
+        ? API_ENDPOINTS.TIMETABLE_BY_ID(editingEntry.id)
+        : API_ENDPOINTS.TIMETABLE;
       
       const method = editingEntry && editingEntry.id ? 'PUT' : 'POST';
       
@@ -283,7 +284,7 @@ const Timetablepage = () => {
     setError('');
 
     try {
-      const response = await fetch(`http://localhost:8080/api/timetable/${id}`, {
+      const response = await fetch(API_ENDPOINTS.TIMETABLE_BY_ID(id), {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',

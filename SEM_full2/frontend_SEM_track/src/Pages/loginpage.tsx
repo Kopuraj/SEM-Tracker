@@ -2,6 +2,7 @@ import '../Styles/loginpage.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import loginImage from '../assets/login_image.jpg';
+import { API_ENDPOINTS } from '../config/apiConfig';
 
 interface LoginResponse {
   success: boolean;
@@ -40,7 +41,7 @@ const Loginpage = () => {
     try {
       console.log('Login attempt:', { username: username.trim() });
 
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

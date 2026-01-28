@@ -3,6 +3,7 @@ import attendanceImg1 from "../assets/Attendancepage_image1.jpg";
 import attendanceImg2 from "../assets/Attendancepage _image2.jpg";
 import { useState, useEffect } from 'react';
 import React from 'react';
+import { API_ENDPOINTS } from '../config/apiConfig';
 
 interface AttendanceRecord {
   id?: number;
@@ -61,7 +62,7 @@ const Attendancepage = () => {
     try {
       const user = JSON.parse(localStorage.getItem('user') || 'null');
       const studentId = user?.username || 'default_user';
-      const response = await fetch(`http://localhost:8080/attendance/student/${encodeURIComponent(studentId)}`, {
+      const response = await fetch(API_ENDPOINTS.ATTENDANCE_BY_STUDENT(studentId), {
         method: 'GET',
         headers: { 'Accept': 'application/json' },
         mode: 'cors'
@@ -86,7 +87,7 @@ const Attendancepage = () => {
     try {
       const user = JSON.parse(localStorage.getItem('user') || 'null');
       const studentId = user?.username || 'default_user';
-      const response = await fetch(`http://localhost:8080/attendance/student/${encodeURIComponent(studentId)}/summary`, {
+      const response = await fetch(API_ENDPOINTS.ATTENDANCE_SUMMARY(studentId), {
         method: 'GET',
         headers: { 'Accept': 'application/json' },
         mode: 'cors'
@@ -142,8 +143,8 @@ const Attendancepage = () => {
       };
 
       const url = editingRecord && editingRecord.id
-        ? `http://localhost:8080/attendance/${editingRecord.id}`
-        : 'http://localhost:8080/attendance';
+        ? API_ENDPOINTS.ATTENDANCE_BY_ID(editingRecord.id)
+        : API_ENDPOINTS.ATTENDANCE;
       
       const method = editingRecord && editingRecord.id ? 'PUT' : 'POST';
 
@@ -207,7 +208,7 @@ const Attendancepage = () => {
         studentId: studentId
       };
 
-      const response = await fetch(`http://localhost:8080/attendance/student/${encodeURIComponent(studentId)}/subjects`, {
+      const response = await fetch(API_ENDPOINTS.ATTENDANCE_SUBJECTS(studentId), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -262,7 +263,7 @@ const Attendancepage = () => {
     setError('');
 
     try {
-      const response = await fetch(`http://localhost:8080/attendance/${id}`, {
+      const response = await fetch(API_ENDPOINTS.ATTENDANCE_BY_ID(id), {
         method: 'DELETE',
         headers: { 'Accept': 'application/json' },
         mode: 'cors'

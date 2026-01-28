@@ -1,6 +1,7 @@
 import '../Styles/examsquizpage.css'
 import examquizimage from "../assets/examsquizpage_image.jpg";
 import { useState, useEffect } from 'react';
+import { API_ENDPOINTS } from '../config/apiConfig';
 
 interface QuizRecord {
   id?: number;
@@ -40,7 +41,7 @@ const ExamsQuizpage = () => {
     try {
       const user = JSON.parse(localStorage.getItem('user') || 'null');
       const studentId = user?.username || 'default_user';
-      const response = await fetch(`http://localhost:8080/marks/student/${encodeURIComponent(studentId)}`, {
+      const response = await fetch(API_ENDPOINTS.MARKS_BY_STUDENT(studentId), {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -80,7 +81,7 @@ const ExamsQuizpage = () => {
         studentId: user?.username || 'default_user'
       };
 
-      const response = await fetch('http://localhost:8080/marks', {
+      const response = await fetch(API_ENDPOINTS.MARKS, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

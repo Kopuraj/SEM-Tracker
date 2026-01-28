@@ -2,6 +2,7 @@ import '../Styles/signuppage.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import loginImage from '../assets/login_image.jpg';
+import { API_ENDPOINTS } from '../config/apiConfig';
 
 interface Student {
   username: string;
@@ -74,7 +75,7 @@ const Signuppage = () => {
     try {
       console.log('Sending registration request:', { username: studentData.username, email: studentData.email });
       
-      const response = await fetch('http://localhost:8080/students/register', {
+      const response = await fetch(API_ENDPOINTS.REGISTER, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

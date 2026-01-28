@@ -27,10 +27,12 @@ public class SemTrackerApplication {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		// Allow specific origins
+		// Allow specific origins (both local development and Docker containers)
 		configuration.setAllowedOrigins(Arrays.asList(
 				"http://localhost:3000",
-				"http://localhost:5173"
+				"http://localhost:5173",
+				"http://frontend:5173",
+				"http://frontend_container_new:5173"
 		));
 
 		// Allow specific methods
