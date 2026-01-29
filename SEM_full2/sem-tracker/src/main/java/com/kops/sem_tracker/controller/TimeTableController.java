@@ -326,22 +326,6 @@ public class TimeTableController {
         }
     }
 
-    /** ✅ UPCOMING EVENTS **/
-    @GetMapping("/upcoming")
-    public ResponseEntity<?> getUpcomingEvents() {
-        try {
-            System.out.println("🔍 GET UPCOMING Request");
-            LocalTime now = LocalTime.now();
-            var upcoming = timetableService.getEventsBetween(now, now.plusMinutes(30));
-            System.out.println("📋 Found " + upcoming.size() + " upcoming events");
-            return ResponseEntity.ok(upcoming);
-        } catch (Exception e) {
-            System.out.println("❌ GET UPCOMING Error: " + e.getMessage());
-            return ResponseEntity.internalServerError()
-                    .body(Map.of("error", "Failed to fetch upcoming events"));
-        }
-    }
-
     /** ✅ SEARCH **/
     @GetMapping("/search/location/{location}")
     public ResponseEntity<?> searchByLocation(@PathVariable String location) {
