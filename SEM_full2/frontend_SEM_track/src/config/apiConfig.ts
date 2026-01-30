@@ -6,9 +6,8 @@ export const API_BASE_URL = (() => {
     // Local development
     return 'http://localhost:8081';
   } else {
-    // Production/Docker deployment
-    // The browser needs to reach the backend at the SAME IP address, but port 8081
-    return `${window.location.protocol}//${window.location.hostname}:8081`;
+    // Production/Docker deployment (Proxying via Port 80)
+    return '';
   }
 })();
 
@@ -16,7 +15,7 @@ export const API_ENDPOINTS = {
   // Authentication
   LOGIN: `${API_BASE_URL}/auth/login`,
   REGISTER: `${API_BASE_URL}/students/register`,
-  
+
   // Timetable
   TIMETABLE: `${API_BASE_URL}/api/timetable`,
   TIMETABLE_TODAY: `${API_BASE_URL}/api/timetable/today`,
@@ -27,11 +26,11 @@ export const API_ENDPOINTS = {
   TIMETABLE_STATS: `${API_BASE_URL}/api/timetable/stats`,
   TIMETABLE_BY_DAY: (day: string) => `${API_BASE_URL}/api/timetable/day/${day}`,
   TIMETABLE_BY_ID: (id: string | number) => `${API_BASE_URL}/api/timetable/${id}`,
-  
+
   // Marks/Exams
   MARKS_BY_STUDENT: (studentId: string) => `${API_BASE_URL}/marks/student/${encodeURIComponent(studentId)}`,
   MARKS: `${API_BASE_URL}/marks`,
-  
+
   // Attendance
   ATTENDANCE_BY_STUDENT: (studentId: string) => `${API_BASE_URL}/attendance/student/${encodeURIComponent(studentId)}`,
   ATTENDANCE_SUMMARY: (studentId: string) => `${API_BASE_URL}/attendance/student/${encodeURIComponent(studentId)}/summary`,
