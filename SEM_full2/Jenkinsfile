@@ -44,9 +44,9 @@ pipeline {
 
         stage('Deploy to AWS') {
             steps {
-                sshagent(credentials: [SSH_KEY_ID]) {
+                withCredentials([sshUserPrivateKey(credentialsId: SSH_KEY_ID, keyFileVariable: 'SSH_KEY_FILE')]) {
                     sh """
-                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} '
+                        ssh -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ${EC2_USER}@${EC2_IP} '
                             # Ensure Docker is installed
                             docker --version
                             
@@ -56,19 +56,15 @@ pipeline {
                             
                             # Stop existing containers
                             docker compose -f docker-compose.prod.yml down || true
-                            
-                            # Start new containers
-                            # NOTE: Assuming docker-compose.prod.yml is on the server. 
-                            # If not, we should copy it (scp) first.
-                            # For now, let's copy it from the workspace to the server.
                         '
                     """
                     // Copy docker-compose.prod.yml to server
-                    sh "scp -o StrictHostKeyChecking=no ./SEM_full2/docker-compose.prod.yml ${EC2_USER}@${EC2_IP}:~/docker-compose.prod.yml"
+                    sh "scp -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ./SEM_full2/docker-compose.prod.yml ${EC2_USER}@${EC2_IP}:~/docker-compose.prod.yml"
                     
                     // Now run up
                     sh """
-                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} '
+                        ssh -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ${EC2_USER}@${EC2_IP} '
+                            # Start new containers
                             docker compose -f docker-compose.prod.yml up -d
                         '
                     """
