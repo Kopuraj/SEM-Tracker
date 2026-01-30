@@ -47,25 +47,38 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: SSH_KEY_ID, keyFileVariable: 'SSH_KEY_FILE')]) {
                     sh """
                         ssh -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ${EC2_USER}@${EC2_IP} '
-                            # Ensure Docker is installed
-                            docker --version
+                            # Update and install Docker if missing
+                            if ! command -v docker &> /dev/null; then
+                                echo "Docker not found. Installing..."
+                                sudo apt-get update
+                                sudo apt-get install -y docker.io docker-compose-v2
+                                sudo usermod -aG docker ${EC2_USER}
+                                # Note: Group membership requires re-login, so we use sudo for now
+                            fi
+
+                            # Ensure Docker service is running
+                            sudo systemctl start docker
+                            sudo systemctl enable docker
+                            
+                            echo "Docker Version:"
+                            sudo docker --version
                             
                             # Pull latest images
-                            docker pull ${DOCKER_HUB_USER}/${IMAGE_NAME_BACKEND}:latest
-                            docker pull ${DOCKER_HUB_USER}/${IMAGE_NAME_FRONTEND}:latest
+                            sudo docker pull ${DOCKER_HUB_USER}/${IMAGE_NAME_BACKEND}:latest
+                            sudo docker pull ${DOCKER_HUB_USER}/${IMAGE_NAME_FRONTEND}:latest
                             
                             # Stop existing containers
-                            docker compose -f docker-compose.prod.yml down || true
+                            sudo docker compose -f /home/${EC2_USER}/docker-compose.prod.yml down || true
                         '
                     """
                     // Copy docker-compose.prod.yml to server
-                    sh "scp -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ./SEM_full2/docker-compose.prod.yml ${EC2_USER}@${EC2_IP}:~/docker-compose.prod.yml"
+                    sh "scp -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ./SEM_full2/docker-compose.prod.yml ${EC2_USER}@${EC2_IP}:/home/${EC2_USER}/docker-compose.prod.yml"
                     
                     // Now run up
                     sh """
                         ssh -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ${EC2_USER}@${EC2_IP} '
                             # Start new containers
-                            docker compose -f docker-compose.prod.yml up -d
+                            sudo docker compose -f /home/${EC2_USER}/docker-compose.prod.yml up -d
                         '
                     """
                 }
