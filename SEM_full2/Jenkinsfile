@@ -68,7 +68,7 @@ pipeline {
                             sudo docker pull ${DOCKER_HUB_USER}/${IMAGE_NAME_FRONTEND}:latest
                             
                             # Stop existing containers
-                            sudo docker compose -f /home/${EC2_USER}/docker-compose.prod.yml down || true
+                            sudo docker compose -f /home/${EC2_USER}/docker-compose.prod.yml down --timeout 30 || true
                         '
                     """
                     // Copy docker-compose.prod.yml to server
