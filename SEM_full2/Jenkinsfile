@@ -24,8 +24,8 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME_BACKEND}:latest ./sem-tracker"
-                    sh "docker build -f ./frontend_SEM_track/Dockerfile.prod -t ${DOCKER_HUB_USER}/${IMAGE_NAME_FRONTEND}:latest ./frontend_SEM_track"
+                    sh "docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME_BACKEND}:latest ./SEM_full2/sem-tracker"
+                    sh "docker build -f ./SEM_full2/frontend_SEM_track/Dockerfile.prod -t ${DOCKER_HUB_USER}/${IMAGE_NAME_FRONTEND}:latest ./SEM_full2/frontend_SEM_track"
                 }
             }
         }
@@ -64,7 +64,7 @@ pipeline {
                         '
                     """
                     // Copy docker-compose.prod.yml to server
-                    sh "scp -o StrictHostKeyChecking=no docker-compose.prod.yml ${EC2_USER}@${EC2_IP}:~/docker-compose.prod.yml"
+                    sh "scp -o StrictHostKeyChecking=no ./SEM_full2/docker-compose.prod.yml ${EC2_USER}@${EC2_IP}:~/docker-compose.prod.yml"
                     
                     // Now run up
                     sh """
