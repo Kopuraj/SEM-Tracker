@@ -17,7 +17,7 @@ services:
       - mysql_data:/var/lib/mysql
 
   backend:
-    image: kopuraj/sem-tracker-backend:latest
+    image: kopu17raj/sem-tracker-backend:latest
     container_name: backend_container_new
     restart: always
     depends_on:
@@ -37,7 +37,7 @@ services:
       start_period: 60s
 
   frontend:
-    image: kopuraj/sem-tracker-frontend:latest
+    image: kopu17raj/sem-tracker-frontend:latest
     container_name: frontend_container_new
     restart: always
     ports:

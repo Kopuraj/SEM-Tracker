@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // REPLACE THESE WITH YOUR ACTUAL VALUES OR CONFIGURE IN JENKINS
-        DOCKER_HUB_USER = 'kopuraj' 
+        DOCKER_HUB_USER = 'kopu17raj' 
         IMAGE_NAME_BACKEND = 'sem-tracker-backend'
         IMAGE_NAME_FRONTEND = 'sem-tracker-frontend'
         EC2_USER = 'ubuntu' // or ec2-user
