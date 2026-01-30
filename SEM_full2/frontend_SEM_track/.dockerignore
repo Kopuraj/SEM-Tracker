@@ -1,0 +1,11 @@
+node_modules
+.git
+.idea
+dist
+build
+coverage
+*.local
+.DS_Store
+Dockerfile
+Dockerfile.prod
+nginx.conf
