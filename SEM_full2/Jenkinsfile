@@ -7,7 +7,7 @@ pipeline {
         IMAGE_NAME_BACKEND = 'sem-tracker-backend'
         IMAGE_NAME_FRONTEND = 'sem-tracker-frontend'
         EC2_USER = 'ubuntu' // or ec2-user
-        EC2_IP = 'YOUR_EC2_PUBLIC_IP' // Add this as a credential or env var if dynamic
+        EC2_IP = '65.2.6.115' // User provided EC2 Public IP
         
         // Credentials IDs set in Jenkins
         DOCKER_CREDS_ID = 'docker-hub-credentials'
