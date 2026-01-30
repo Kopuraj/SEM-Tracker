@@ -6,8 +6,9 @@ export const API_BASE_URL = (() => {
     // Local development
     return 'http://localhost:8081';
   } else {
-    // Docker deployment - use the backend service name
-    return 'http://backend_container_new:8081';
+    // Production/Docker deployment
+    // The browser needs to reach the backend at the SAME IP address, but port 8081
+    return `${window.location.protocol}//${window.location.hostname}:8081`;
   }
 })();
 

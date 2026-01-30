@@ -1,5 +1,5 @@
 import '../Styles/attendance.css';
-import attendanceImg1 from "../assets/Attendancepage_image1.jpg"; 
+import attendanceImg1 from "../assets/Attendancepage_image1.jpg";
 import attendanceImg2 from "../assets/Attendancepage _image2.jpg";
 import { useState, useEffect } from 'react';
 import React from 'react';
@@ -36,7 +36,7 @@ const Attendancepage = () => {
   const [viewMode, setViewMode] = useState<'add' | 'view' | 'settings'>('view');
   const [attendanceSummary, setAttendanceSummary] = useState<any>(null);
   const [editingRecord, setEditingRecord] = useState<AttendanceRecord | null>(null);
-  
+
   const [settingsFormData, setSettingsFormData] = useState<SubjectAttendanceSettings>({
     studentId: (JSON.parse(localStorage.getItem('user') || 'null')?.username) || 'default_user',
     subjectName: '',
@@ -45,7 +45,7 @@ const Attendancepage = () => {
     totalAttendedHours: 0,
     attendancePercentage: 0
   });
-  
+
   const [formData, setFormData] = useState<AttendanceRecord>({
     moduleName: '',
     attendanceDate: new Date().toISOString().split('T')[0],
@@ -67,7 +67,7 @@ const Attendancepage = () => {
         headers: { 'Accept': 'application/json' },
         mode: 'cors'
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setAttendanceRecords(data);
@@ -92,7 +92,7 @@ const Attendancepage = () => {
         headers: { 'Accept': 'application/json' },
         mode: 'cors'
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setAttendanceSummary(data);
@@ -107,12 +107,12 @@ const Attendancepage = () => {
     try {
       const user = JSON.parse(localStorage.getItem('user') || 'null');
       const studentId = user?.username || 'default_user';
-      const response = await fetch(`http://localhost:8080/attendance/student/${encodeURIComponent(studentId)}/subjects`, {
+      const response = await fetch(API_ENDPOINTS.ATTENDANCE_SUBJECTS(studentId), {
         method: 'GET',
         headers: { 'Accept': 'application/json' },
         mode: 'cors'
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setSubjectSettings(data);
@@ -145,7 +145,7 @@ const Attendancepage = () => {
       const url = editingRecord && editingRecord.id
         ? API_ENDPOINTS.ATTENDANCE_BY_ID(editingRecord.id)
         : API_ENDPOINTS.ATTENDANCE;
-      
+
       const method = editingRecord && editingRecord.id ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -202,7 +202,7 @@ const Attendancepage = () => {
     try {
       const user = JSON.parse(localStorage.getItem('user') || 'null');
       const studentId = user?.username || 'default_user';
-      
+
       const submitData = {
         ...settingsFormData,
         studentId: studentId
@@ -312,7 +312,7 @@ const Attendancepage = () => {
     setViewMode('view');
   };
 
-  return(
+  return (
     <div className="attendance-page">
       {/* Messages */}
       {message && <div className="success-message">{message}</div>}
@@ -324,22 +324,22 @@ const Attendancepage = () => {
           {/* Left side - Image 1 and Buttons */}
           <section className="left-section">
             <div className="image-container-left">
-              <img src={attendanceImg1} alt="Student raising hand" className="main-image1"/>
+              <img src={attendanceImg1} alt="Student raising hand" className="main-image1" />
             </div>
             <div className="attendancepage_buttons">
-              <button 
+              <button
                 className={`Att_page_button1 ${viewMode === 'add' ? 'active' : ''}`}
                 onClick={openAddModal}
               >
-               <span className="star">★</span> Add <span className="arrow">▼</span>
+                <span className="star">★</span> Add <span className="arrow">▼</span>
               </button>
-              <button 
+              <button
                 className={`Att_page_button2 ${viewMode === 'view' ? 'active' : ''}`}
                 onClick={() => setViewMode('view')}
               >
-               <span className="star">★</span> View <span className="arrow">▼</span>
+                <span className="star">★</span> View <span className="arrow">▼</span>
               </button>
-              <button 
+              <button
                 className={`Att_page_button3 ${viewMode === 'settings' ? 'active' : ''}`}
                 onClick={() => {
                   setIsSettingsModalOpen(true);
@@ -354,14 +354,14 @@ const Attendancepage = () => {
           {/* Right side - Text and Image 2 */}
           <section className="right-section">
             <div className='main_text1'>
-              <h1>Never Miss a Beat <br/>with Your <br/>Attendance</h1>
+              <h1>Never Miss a Beat <br />with Your <br />Attendance</h1>
               <h2>
-                View your attendance percentage, <br/>log presences, and maintain perfect<br/>
+                View your attendance percentage, <br />log presences, and maintain perfect<br />
                 records
               </h2>
             </div>
             <div className="image-container-right">
-              <img src={attendanceImg2} alt="Business growth graph" className="main-image2"/>
+              <img src={attendanceImg2} alt="Business growth graph" className="main-image2" />
             </div>
           </section>
         </div>
@@ -462,7 +462,7 @@ const Attendancepage = () => {
                   id="subjectName"
                   name="subjectName"
                   value={settingsFormData.subjectName}
-                  onChange={(e) => setSettingsFormData(prev => ({...prev, subjectName: e.target.value}))}
+                  onChange={(e) => setSettingsFormData(prev => ({ ...prev, subjectName: e.target.value }))}
                   required
                   placeholder="Enter subject name"
                 />
@@ -475,7 +475,7 @@ const Attendancepage = () => {
                   id="totalScheduledHours"
                   name="totalScheduledHours"
                   value={settingsFormData.totalScheduledHours}
-                  onChange={(e) => setSettingsFormData(prev => ({...prev, totalScheduledHours: parseFloat(e.target.value) || 0}))}
+                  onChange={(e) => setSettingsFormData(prev => ({ ...prev, totalScheduledHours: parseFloat(e.target.value) || 0 }))}
                   required
                   min="0"
                   step="0.5"
@@ -489,7 +489,7 @@ const Attendancepage = () => {
                   id="passPercentage"
                   name="passPercentage"
                   value={settingsFormData.passPercentage}
-                  onChange={(e) => setSettingsFormData(prev => ({...prev, passPercentage: parseFloat(e.target.value) || 75}))}
+                  onChange={(e) => setSettingsFormData(prev => ({ ...prev, passPercentage: parseFloat(e.target.value) || 75 }))}
                   required
                   min="0"
                   max="100"
@@ -514,7 +514,7 @@ const Attendancepage = () => {
       {viewMode === 'view' && (
         <div className="attendance-list">
           <h2>Your Attendance Records</h2>
-          
+
           {/* Subject-wise Attendance Summary */}
           {subjectSettings.length > 0 && (
             <div className="subject-attendance-summary">
@@ -523,7 +523,7 @@ const Attendancepage = () => {
                 {subjectSettings.map(subject => {
                   const neededHours = calculateNeededHours(subject);
                   const isEligible = subject.attendancePercentage >= subject.passPercentage;
-                  
+
                   return (
                     <div key={subject.id} className={`subject-card ${isEligible ? 'eligible' : 'not-eligible'}`}>
                       <h4>{subject.subjectName}</h4>
@@ -561,7 +561,7 @@ const Attendancepage = () => {
               </div>
             </div>
           )}
-          
+
           {/* Overall Attendance Summary */}
           {attendanceSummary && (
             <div className="attendance-summary">
@@ -587,7 +587,7 @@ const Attendancepage = () => {
               )}
             </div>
           )}
-          
+
           {isLoading ? (
             <div className="loading">Loading attendance records...</div>
           ) : attendanceRecords.length === 0 ? (
@@ -610,20 +610,20 @@ const Attendancepage = () => {
                       <td>{record.moduleName}</td>
                       <td>{new Date(record.attendanceDate).toLocaleDateString()}</td>
                       <td>
-                        {(record.startTime.length > 5 ? record.startTime.substring(0,5) : record.startTime)}
+                        {(record.startTime.length > 5 ? record.startTime.substring(0, 5) : record.startTime)}
                         {" - "}
-                        {(record.endTime.length > 5 ? record.endTime.substring(0,5) : record.endTime)}
+                        {(record.endTime.length > 5 ? record.endTime.substring(0, 5) : record.endTime)}
                       </td>
                       <td>{record.attendedHours}h</td>
                       <td>
-                        <button 
+                        <button
                           className="edit-btn"
                           onClick={() => handleEditRecord(record)}
                           disabled={isLoading}
                         >
                           Edit
                         </button>
-                        <button 
+                        <button
                           className="delete-btn"
                           onClick={() => record.id && handleDeleteRecord(record.id)}
                           disabled={isLoading}
