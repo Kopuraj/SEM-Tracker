@@ -52,29 +52,39 @@ const Loginpage = () => {
         }),
       });
 
-      const data: LoginResponse = await response.json();
-      console.log('Login response:', data);
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data: LoginResponse = await response.json();
+        console.log('Login response:', data);
 
-      if (response.ok && data.success) {
-        console.log('Login successful:', data.user);
-        
-        // Store user data in localStorage (optional)
-        if (data.user) {
-          localStorage.setItem('user', JSON.stringify(data.user));
+        if (response.ok && data.success) {
+          console.log('Login successful:', data.user);
+
+          if (data.user) {
+            localStorage.setItem('user', JSON.stringify(data.user));
+          }
+
+          setUsername('');
+          setPassword('');
+          navigate('/homepage', { replace: true });
+        } else {
+          setError(data.message || 'Login failed. Please check your credentials.');
         }
-        
-        // Clear form
-        setUsername('');
-        setPassword('');
-        
-        // Redirect to home page
-        navigate('/homepage', { replace: true });
       } else {
-        setError(data.message || 'Login failed. Please check your credentials.');
+        // Handle non-JSON response (e.g., 502 Bad Gateway HTML)
+        console.error('Non-JSON response received:', response.status, response.statusText);
+        if (response.status === 502) {
+          setError('Server is currently unavailable (Bad Gateway). Please try again in 1-2 minutes.');
+        } else if (response.status === 504) {
+          setError('Server timeout. Please try again.');
+        } else {
+          setError(`Server error (${response.status}). Please contact support.`);
+        }
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('Network error. Please check if the server is running.');
+      setError('Network error. Please check your internet connection or if the server is down.');
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +123,7 @@ const Loginpage = () => {
             />
           </div>
           {error && <div className="error-message">{error}</div>}
-          <button 
+          <button
             type="submit"
             className="login-btn2"
             disabled={isLoading}
@@ -126,11 +136,11 @@ const Loginpage = () => {
             onClick={handleSignupRedirect}
             className="sign-up"
             type="button"
-            style={{ 
-              background: 'none', 
-              border: 'none', 
-              color: '#007bff', 
-              textDecoration: 'underline', 
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#007bff',
+              textDecoration: 'underline',
               cursor: 'pointer',
               fontSize: '16px',
               fontWeight: 'bold',
