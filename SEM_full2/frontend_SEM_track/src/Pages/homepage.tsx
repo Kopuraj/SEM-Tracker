@@ -1,34 +1,36 @@
 import '../Styles/homepage.css'
+import groupStudyImg from '../assets/group-study.jpg';
+import homepageImg2 from '../assets/homepage_image2.jpg';
 
-const Homepage = () =>{
-    return (
-    
-    
-      
-    
-        <main className="home-container">
+const Homepage = () => {
+  return (
+
+
+
+
+    <main className="home-container">
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-text">
           <div>
-                  <h1>TRack Your Acadamic Journey with Ease</h1>
+            <h1>TRack Your Acadamic Journey with Ease</h1>
           </div>
           <div>
-           <p>
-            Our semester Progress Tracking System empowers students to manage their academic progress effortlessly.
-            With features like attendance tracking, quiz reminders, and performance visualization, you can stay
-            organized and focused on your goals.
-          </p>
-          <div className='hero-buttons'>
-            <button className="btn">Get Started</button>
-            <button className="btn">Learn More</button>
+            <p>
+              Our semester Progress Tracking System empowers students to manage their academic progress effortlessly.
+              With features like attendance tracking, quiz reminders, and performance visualization, you can stay
+              organized and focused on your goals.
+            </p>
+            <div className='hero-buttons'>
+              <button className="btn">Get Started</button>
+              <button className="btn">Learn More</button>
+            </div>
           </div>
-          </div>
-          
-          
+
+
         </div>
         <div className="hero-image">
-          <img src="src/assets/group-study.jpg" alt="Students studying" />
+          <img src={groupStudyImg} alt="Students studying" />
         </div>
       </section>
 
@@ -42,7 +44,7 @@ const Homepage = () =>{
             <p>
               Our attendance tracking feature ensures you're always present and accounted for.
             </p>
-            
+
           </div>
           <div className="card">
             <div className="icon">📅</div>
@@ -57,29 +59,29 @@ const Homepage = () =>{
             <p>
               Stay ahead of deadlines by monitoring your assessments with ease.
             </p>
-           
+
           </div>
         </div>
       </section>
 
       {/* Join Section */}
       <section className='join-us'>
-        
+
         <div className="join-content">
-         
-      
+
+
           <h1>Join us Today to make your semester effectively !</h1>
-        
-          
-        <div className="join-image">
-          <img src="/src/assets/homepage_image2.jpg" alt="Calendar scheduling" />
+
+
+          <div className="join-image">
+            <img src={homepageImg2} alt="Calendar scheduling" />
+          </div>
+
         </div>
-          
-        </div>
-       
-        
+
+
       </section>
     </main>
-    );
+  );
 };
 export default Homepage;

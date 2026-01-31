@@ -1,10 +1,11 @@
 import '../Styles/aboutus.css'
-const Aboutuspage = () =>{
-    return(
-        <div className="about-us-container">
+import teamImg from '../assets/aboutuspage_image.jpg';
+const Aboutuspage = () => {
+  return (
+    <div className="about-us-container">
       <div className="content-wrapper">
         <div className="team-photo">
-          <img src="/src/assets/aboutuspage_image.jpg" alt="Team" className="team-image" />
+          <img src={teamImg} alt="Team" className="team-image" />
         </div>
         <div className="text-section">
           <h2>Welcome to Semester Sphere</h2>
@@ -28,11 +29,11 @@ const Aboutuspage = () =>{
           </p>
         </div>
 
-        
+
       </div>
     </div>
 
-    );
+  );
 };
 
 export default Aboutuspage;

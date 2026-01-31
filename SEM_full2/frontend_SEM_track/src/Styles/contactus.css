@@ -64,7 +64,7 @@ font-size: 2rem;
 }
 
 .contact-image-section {
-  background-image: url('/src/assets/contactus2_image.jpg');
+  background-image: url('../assets/contactus2_image.jpg');
   background-size: cover;
   margin-top: 40px;
   background-position: center;
