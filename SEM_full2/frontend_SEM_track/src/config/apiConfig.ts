@@ -6,8 +6,9 @@ export const API_BASE_URL = (() => {
     // Local development
     return 'http://localhost:8081';
   } else {
-    // Production/Docker deployment (Proxying via Port 80)
-    return '';
+    // Production/Docker deployment: Use same origin for nginx reverse proxy
+    // Nginx will route /auth, /api, /attendance, /marks, /students to backend:8081
+    return window.location.origin;
   }
 })();
 
