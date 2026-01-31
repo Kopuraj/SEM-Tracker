@@ -105,8 +105,9 @@
 }
 
 .timetable-image {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -260,13 +261,18 @@
   text-align: center;
 }
 
+.timetable-table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .timetable-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 600px;
+  /* Ensure table doesn't get squashed too much */
 }
 
 .timetable-table th,
@@ -291,7 +297,8 @@
 }
 
 /* Action buttons */
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
   padding: 8px 15px;
   margin: 0 5px;
   border: none;
@@ -439,40 +446,40 @@
     flex-direction: column;
     text-align: center;
   }
-  
+
   .text-container h1 {
     font-size: 2rem;
   }
-  
+
   .timetable-image {
     width: 100%;
     max-width: 300px;
     margin-top: 20px;
   }
-  
+
   .button-container {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .button {
     width: 200px;
   }
-  
+
   .timetable-table {
     display: block;
     overflow-x: auto;
   }
-  
+
   .modal {
     padding: 20px;
     margin: 10px;
   }
-  
+
   .modal-buttons {
     flex-direction: column;
   }
-  
+
   .modal-buttons button {
     width: 100%;
   }
@@ -482,25 +489,26 @@
   .timetable-container2 {
     padding: 10px;
   }
-  
+
   .text-container h1 {
     font-size: 1.8rem;
   }
-  
+
   .text-container p {
     font-size: 1rem;
   }
-  
+
   .timetable-list {
     padding: 15px;
   }
-  
+
   .timetable-table th,
   .timetable-table td {
     padding: 10px;
   }
-  
-  .edit-btn, .delete-btn {
+
+  .edit-btn,
+  .delete-btn {
     padding: 6px 10px;
     font-size: 0.8rem;
   }
@@ -634,7 +642,7 @@
   transform: scale(1.2);
 }
 
-.radio-option input[type="radio"]:checked + span {
+.radio-option input[type="radio"]:checked+span {
   font-weight: bold;
 }
 
@@ -655,16 +663,16 @@
     margin-top: 10px;
     justify-content: center;
   }
-  
+
   .view-buttons .button {
     font-size: 0.8rem;
     padding: 8px 12px;
   }
-  
+
   .schedule-type-options {
     gap: 8px;
   }
-  
+
   .radio-option {
     padding: 8px;
     font-size: 0.9rem;

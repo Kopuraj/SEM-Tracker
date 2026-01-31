@@ -109,7 +109,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.Att_page_button1:hover, 
+.Att_page_button1:hover,
 .Att_page_button2:hover,
 .Att_page_button3:hover {
   color: #350cd7;
@@ -413,7 +413,8 @@
 }
 
 /* Edit/Delete buttons */
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
   padding: 0.5rem 0.8rem;
   margin: 0 0.25rem;
   border: none;
@@ -433,12 +434,14 @@
   color: white;
 }
 
-.edit-btn:hover, .delete-btn:hover {
+.edit-btn:hover,
+.delete-btn:hover {
   opacity: 0.8;
   transform: scale(1.05);
 }
 
-.edit-btn:disabled, .delete-btn:disabled {
+.edit-btn:disabled,
+.delete-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
@@ -460,53 +463,53 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .main_text1 h1 {
     font-size: 2rem;
     text-align: center;
   }
-  
+
   .main_text1 h2 {
     text-align: center;
   }
-  
+
   .main-image1,
   .main-image2 {
-    
-    height: 500px;
-    width: 500px;
+    height: auto;
+    width: 100%;
+    max-width: 300px;
   }
-  
+
   .image-container-left,
   .image-container-right {
     justify-content: center;
-    width: 50%;
+    width: 100%;
   }
-  
+
   .attendancepage_buttons {
     align-items: center;
   }
-  
+
   .attendance-list {
     margin: 1rem;
     padding: 1rem;
   }
-  
+
   .modal {
     width: 95%;
     padding: 1rem;
   }
-  
+
   .attendance-table th,
   .attendance-table td {
     padding: 0.5rem;
     font-size: 0.9rem;
   }
-  
+
   .subject-cards {
     grid-template-columns: 1fr;
   }
-  
+
   .summary-cards {
     grid-template-columns: 1fr;
   }

@@ -17,18 +17,19 @@
 
 .hero-text {
   display: flex;
-  height: 200px;
+  min-height: 200px;
   flex: 1;
-  flex-direction:row;
-  max-width:100%;
-  gap:40px;
+  flex-direction: row;
+  max-width: 100%;
+  gap: 40px;
 }
 
 .hero-text h1 {
-  font-size:3rem;
-  font-weight:700;
+  font-size: 3rem;
+  font-weight: 700;
   margin-bottom: 20px;
-  width: 500px;
+  width: auto;
+  max-width: 500px;
 }
 
 .hero-text p {
@@ -37,12 +38,13 @@
 }
 
 .hero-buttons .btn {
- 
+
   margin-right: 50px;
   font-size: 1rem;
   padding: 8px 16px;
-  justify-content: left; /* Center buttons horizontally */
-           
+  justify-content: left;
+  /* Center buttons horizontally */
+
 }
 
 .hero-image img {
@@ -78,8 +80,10 @@
 }
 
 .card:hover {
-  background-color: #5e5c5c; /* Light grey background on hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a shadow to create the clickable effect */
+  background-color: #5e5c5c;
+  /* Light grey background on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Adds a shadow to create the clickable effect */
 }
 
 .icon {
@@ -114,44 +118,104 @@
 
 .join-content {
 
-  
- display: flex;
-  align-items: center;      /* vertically center items */
+
+  display: flex;
+  align-items: center;
+  /* vertically center items */
   justify-content: space-between;
   width: 100%;
-  height: 100%; 
+  height: 100%;
 
 
 }
 
 .join-content h1 {
-  max-width: 50%;
- text-align: justify;
-  font-size:3rem;
-  font-weight:700;
+  max-width: 100%;
+  text-align: justify;
+  font-size: 3rem;
+  font-weight: 700;
   margin-bottom: 20px;
-  width: 500px;
+  width: auto;
 }
- 
+
 
 
 
 
 /* Right side: image */
 .join-image {
-  flex: 1;                   /* take up 50% of width */
+  flex: 1;
+  /* take up 50% of width */
   display: flex;
   justify-content: right;
-  align-items:end;
+  align-items: end;
 }
 
 .join-image img {
-  max-width:750px;
+  max-width: 750px;
   height: 500px;
-  border-radius: 8px;        /* optional rounded corners */
+  border-radius: 8px;
+  /* optional rounded corners */
 }
+
 .btn:hover {
-  background-color:#0000FF;
+  background-color: #0000FF;
   color: white;
 }
 
+@media (max-width: 1024px) {
+  .hero-text {
+    flex-direction: column;
+    height: auto;
+    text-align: center;
+  }
+
+  .hero-text h1 {
+    max-width: 100%;
+    font-size: 2.5rem;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+    display: flex;
+    gap: 15px;
+  }
+
+  .hero-buttons .btn {
+    margin-right: 0;
+  }
+
+  .join-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .join-content h1 {
+    max-width: 100%;
+    font-size: 2.5rem;
+    text-align: center;
+  }
+
+  .join-image img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .hero-text h1,
+  .join-content h1 {
+    font-size: 2rem;
+  }
+
+  .feature-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 100%;
+  }
+}

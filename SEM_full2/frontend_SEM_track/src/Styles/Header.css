@@ -15,13 +15,14 @@
   background-color: transparent;
   font-family: 'Segoe UI', sans-serif;
   font-size: 16px;
-  background-color:black;
+  background-color: black;
 }
 
 .logo {
   font-size: 30px;
   font-weight: 750;
-  color:		#FF00FF; /* Dark shade matching the design */
+  color: #FF00FF;
+  /* Dark shade matching the design */
 }
 
 .nav-links {
@@ -31,13 +32,14 @@
 
 .nav-links a {
   text-decoration: none;
-  color:#F0FFFF;
+  color: #F0FFFF;
   font-weight: 500;
   transition: color 0.2s ease-in-out;
 }
 
 .nav-links a:hover {
-  color:	#FF69B4; /* Sky blue on hover */
+  color: #FF69B4;
+  /* Sky blue on hover */
 }
 
 .login-btn {
@@ -52,7 +54,7 @@
 }
 
 .login-btn:hover {
-  background-color:#0000FF;
+  background-color: #0000FF;
   color: white;
 }
 
@@ -93,14 +95,14 @@
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color:rgb(131, 126, 126);
+  background-color: rgb(131, 126, 126);
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(99, 97, 97, 0.2);
   z-index: 10;
 }
 
 .dropdown-content a {
-  color:white;
+  color: white;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
@@ -108,4 +110,25 @@
 
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .nav-links {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .user-section {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+  }
 }

@@ -2,9 +2,11 @@
 .login-container {
   display: flex;
   align-items: center;
-  height: 100vh;
+  justify-content: center;
+  min-height: 100vh;
   background: linear-gradient(to right, #aa2e9efa, #d84ba481);
   position: relative;
+  padding: 20px;
 }
 
 /* Login box styling */
@@ -13,8 +15,9 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  margin-left: 200px;
+  width: 90%;
+  max-width: 350px;
+  margin: 0 auto;
   z-index: 10;
 }
 
@@ -72,13 +75,15 @@
   margin-top: 15px;
 }
 
-.sign-up, .forgot-password {
+.sign-up,
+.forgot-password {
   font-size: 14px;
   text-decoration: none;
   color: #3498db;
 }
 
-.sign-up:hover, .forgot-password:hover {
+.sign-up:hover,
+.forgot-password:hover {
   text-decoration: underline;
   color: red;
 }
@@ -99,4 +104,19 @@
   height: 100%;
   object-fit: cover;
   filter: brightness(50%);
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .image-container {
+    display: none;
+    /* Hide background image on small screens for better form visibility */
+  }
+
+  .login-box {
+    margin-top: 20px;
+  }
 }
