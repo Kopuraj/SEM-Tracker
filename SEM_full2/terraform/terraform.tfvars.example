@@ -1,0 +1,18 @@
+# Terraform Variables - Your Specific Values
+# IMPORTANT: Add this file to .gitignore - DO NOT commit to Git!
+
+# AWS Configuration
+aws_region = "ap-south-1"  # Change to your actual region
+
+# EC2 Configuration
+instance_type   = "t3.micro"              # Change to t2.micro if that's what you're using
+ec2_ami_id      = "ami-XXXXXXXXXXXXXX"    # ⚠️ REPLACE: Get from AWS Console
+key_pair_name   = "your-key-pair-name"    # ⚠️ REPLACE: Your SSH key pair name
+
+# Project Information
+project_name = "SEM-Tracker"
+environment  = "Production"
+owner        = "SEM-Tracker-Team"
+
+# Cost Tracking
+cost_center = "Development"
