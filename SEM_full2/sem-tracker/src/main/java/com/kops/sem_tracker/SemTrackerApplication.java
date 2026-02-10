@@ -26,33 +26,8 @@ public class SemTrackerApplication {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-
-		// Allow specific origins (both local development and Docker containers)
-		configuration.setAllowedOrigins(Arrays.asList(
-				"http://localhost:3000",
-				"http://localhost:5173",
-				"http://frontend:5173",
-				"http://frontend_container_new:5173"
-		));
-
-		// Allow specific methods
-		configuration.setAllowedMethods(Arrays.asList(
-				"GET", "POST", "PUT", "DELETE", "OPTIONS"
-		));
-
-		// Allow all headers
-		configuration.setAllowedHeaders(Arrays.asList("*"));
-
-		// Allow credentials
-		configuration.setAllowCredentials(true);
-
-		// Apply to all endpoints
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-
-		return source;
-	}
+	/*
+	 * CORS Configuration moved to SecurityConfig.java to avoid duplicate bean definition error.
+	 * The application failed to start because both classes defined 'corsConfigurationSource'.
+	 */
 }
