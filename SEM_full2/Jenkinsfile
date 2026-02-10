@@ -85,6 +85,7 @@ pipeline {
                     sh "scp -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ./SEM_full2/docker-compose.prod.yml ${EC2_USER}@${EC2_IP}:/home/${EC2_USER}/docker-compose.prod.yml"
                     
                     // Now run up
+                    sh """
                         ssh -o StrictHostKeyChecking=no -i \${SSH_KEY_FILE} ${EC2_USER}@${EC2_IP} '
                             # Start new containers
                             sudo docker compose -f /home/${EC2_USER}/docker-compose.prod.yml up -d
