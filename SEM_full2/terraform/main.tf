@@ -76,8 +76,8 @@ resource "aws_security_group" "sem_tracker_sg" {
   
   # Backend API (if needed)
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8081
+    to_port     = 8081
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     description = "Backend API"
