@@ -7,11 +7,6 @@ import org.springframework.context.annotation.Bean;
 // import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @SpringBootApplication(exclude = {MailSenderAutoConfiguration.class})
 // @EnableScheduling - Disabled to remove email scheduling feature
@@ -24,35 +19,5 @@ public class SemTrackerApplication {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-
-		// Allow specific origins (both local development and Docker containers)
-		configuration.setAllowedOrigins(Arrays.asList(
-				"http://localhost:3000",
-				"http://localhost:5173",
-				"http://frontend:5173",
-				"http://frontend_container_new:5173"
-		));
-
-		// Allow specific methods
-		configuration.setAllowedMethods(Arrays.asList(
-				"GET", "POST", "PUT", "DELETE", "OPTIONS"
-		));
-
-		// Allow all headers
-		configuration.setAllowedHeaders(Arrays.asList("*"));
-
-		// Allow credentials
-		configuration.setAllowCredentials(true);
-
-		// Apply to all endpoints
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-
-		return source;
 	}
 }
