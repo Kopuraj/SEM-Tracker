@@ -38,7 +38,7 @@ SEM-Tracker is a full-stack web application designed to help students organize t
 - Beautiful HTML-formatted content
 - Personalized for each user
 - Includes regular classes and special events
-- Configurable via environment variables
+- Configurable via environment
 
 ✅ **Modern User Interface**
 - Responsive design
