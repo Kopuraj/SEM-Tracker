@@ -8,7 +8,7 @@ const Aboutuspage = () => {
           <img src={teamImg} alt="Team" className="team-image" />
         </div>
         <div className="text-section">
-          <h2>welcome to SEM_Tracker</h2>
+          <h2>wel</h2>
           <p>
             The ultimate tool for tracking and managing your academic journey. We are a team of passionate developers
             dedicated to creating a user-friendly platform that helps students and academic staff efficiently monitor
