@@ -4,7 +4,7 @@ A modern web application for efficient semester management and scheduling. Stude
 
 ## � Live Demo
 
-**🚀 [View Live Application](http://65.2.6.115)** - Deployed on AWS EC2
+**🚀 [View Live Application](http://13.204.86.202)** - Deployed on AWS EC2
 
 Try it out! The application is live and running. You can explore all features including schedule management, multiple view modes, and the statistics dashboard.
 
